@@ -39,34 +39,40 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-[360px] flex flex-col items-center">
-        <h1 className="text-[2.75rem] leading-none font-bold text-black mb-16">
-          Teomed App
-        </h1>
+    <div className="min-h-screen bg-gradient-to-b from-blue-900 via-blue-800 to-blue-700 flex flex-col items-center justify-center px-4">
+      <div className="w-full max-w-[360px] flex flex-col items-center bg-white/10 backdrop-blur-sm rounded-2xl p-8 shadow-xl">
+        <h2 className="text-2xl font-medium text-white mb-8">
+          Formulário de login
+        </h2>
         
         <form onSubmit={handleSubmit} className="w-full space-y-6">
           <div className="space-y-6">
-            <div className="space-y-2">
-              <label htmlFor="email" className="block text-[15px] text-black">
-                Email
+            <div className="relative">
+              <label htmlFor="email" className="block text-[15px] text-white/90 mb-2 flex items-center gap-2">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                </svg>
+                Login
               </label>
               <input
                 type="email"
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full h-12 px-4 text-black bg-white border border-[#E5E5E5] rounded-lg focus:outline-none focus:border-[#0066FF] transition-colors"
+                className="w-full h-12 px-4 text-white bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:border-white/40 transition-colors placeholder-white/50"
                 required
                 disabled={isLoading}
                 autoComplete="email"
                 autoFocus
-                placeholder="exemplo@teomed.com"
+                placeholder="Digite seu email"
               />
             </div>
 
-            <div className="space-y-2">
-              <label htmlFor="password" className="block text-[15px] text-black">
+            <div className="relative">
+              <label htmlFor="password" className="block text-[15px] text-white/90 mb-2 flex items-center gap-2">
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                </svg>
                 Senha
               </label>
               <input
@@ -74,7 +80,7 @@ export default function Login() {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full h-12 px-4 text-black bg-white border border-[#E5E5E5] rounded-lg focus:outline-none focus:border-[#0066FF] transition-colors"
+                className="w-full h-12 px-4 text-white bg-white/10 border border-white/20 rounded-lg focus:outline-none focus:border-white/40 transition-colors placeholder-white/50"
                 required
                 disabled={isLoading}
                 autoComplete="current-password"
@@ -84,7 +90,7 @@ export default function Login() {
           </div>
 
           {error && (
-            <div className="text-[#FF3B30] text-[13px] text-center">
+            <div className="text-red-300 text-[13px] text-center">
               {error}
             </div>
           )}
@@ -92,7 +98,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full h-12 bg-[#0066FF] text-white text-[15px] rounded-lg hover:bg-[#0052CC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full h-12 bg-white/10 text-white text-[15px] rounded-lg hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-white/20"
           >
             {isLoading ? (
               <span className="inline-flex items-center">
@@ -103,7 +109,7 @@ export default function Login() {
                 Entrando...
               </span>
             ) : (
-              'Entrar'
+              'Acessar'
             )}
           </button>
         </form>
