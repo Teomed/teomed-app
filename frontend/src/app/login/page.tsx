@@ -39,7 +39,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-[#1e3a8a] flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-[#2563eb] flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-[360px] flex flex-col items-center">
         <h2 className="text-2xl font-medium text-white mb-8">
           Formulário de login
@@ -48,7 +48,7 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="w-full space-y-4">
           <div className="space-y-4">
             <div>
-              <div className="flex items-center gap-2 text-white/90 mb-2">
+              <div className="flex items-center gap-2 text-white mb-2">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
                 </svg>
@@ -59,7 +59,7 @@ export default function Login() {
                 id="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full h-12 px-4 text-white bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-white/50 transition-colors"
+                className="w-full h-12 px-4 text-white bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:border-white/30 transition-colors"
                 required
                 disabled={isLoading}
                 autoComplete="email"
@@ -68,7 +68,7 @@ export default function Login() {
             </div>
 
             <div>
-              <div className="flex items-center gap-2 text-white/90 mb-2">
+              <div className="flex items-center gap-2 text-white mb-2">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
@@ -79,7 +79,7 @@ export default function Login() {
                 id="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full h-12 px-4 text-white bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:border-white/50 transition-colors"
+                className="w-full h-12 px-4 text-white bg-white/5 border border-white/20 rounded-lg focus:outline-none focus:border-white/30 transition-colors"
                 required
                 disabled={isLoading}
                 autoComplete="current-password"
@@ -96,11 +96,11 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full h-12 bg-white text-[#1e3a8a] text-[15px] font-medium rounded-lg hover:bg-white/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-6"
+            className="w-full h-12 bg-white/10 text-white text-[15px] font-medium rounded-lg hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-6 border border-white/20"
           >
             {isLoading ? (
               <span className="inline-flex items-center">
-                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-[#1e3a8a]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
