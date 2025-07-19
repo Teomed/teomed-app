@@ -39,7 +39,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
       <div className="w-full max-w-[360px] flex flex-col items-center">
         <h1 className="text-[2.75rem] leading-none font-bold text-black mb-16">
           Teomed App
