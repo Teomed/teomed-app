@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { ReactElement } from 'react';
+import type { ReactElement, JSX } from 'react';
 import { Application } from './types';
 
 export default function Dashboard(): ReactElement {
@@ -95,26 +95,24 @@ export default function Dashboard(): ReactElement {
                   <span className="text-[13px] text-[#666666]">
                     {new Date(app.createdAt).toLocaleDateString('pt-BR')}
                   </span>
-                  <span
-                    className={`px-2 py-1 rounded-full text-[13px] ${app.status === 'active' ? 'bg-[#E3F2E6] text-[#1C7A2C]' : 'bg-[#FFF4E5] text-[#B25D05]'}`}
-                  >
-                    {app.status === 'active' ? 'Ativo' : 'Inativo'}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span
+                      className={`px-2 py-1 rounded-full text-[13px] ${app.status === 'active' ? 'bg-[#E3F2E6] text-[#1C7A2C]' : 'bg-[#FFF4E5] text-[#B25D05]'}`}
+                    >
+                      {app.status === 'active' ? 'Ativo' : 'Inativo'}
+                    </span>
+                    <button className="text-[#666666] hover:text-black transition-colors">
+                      Editar
+                    </button>
+                    <button className="text-[#666666] hover:text-black transition-colors">
+                      Excluir
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         )}
-      </main>
-    </div>
-  );
-}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
       </main>
     </div>
   );
