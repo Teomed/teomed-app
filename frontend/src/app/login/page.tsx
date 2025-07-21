@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import './styles.css';
+
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -17,7 +17,7 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:3001/auth/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,7 +31,8 @@ export default function Login() {
 
       const data = await response.json();
       localStorage.setItem('token', data.access_token);
-      router.push('/dashboard');
+      // Usar replace em vez de push para evitar problemas de navegação
+      window.location.href = '/dashboard';
     } catch (err) {
       setError('Email ou senha inválidos. Por favor, tente novamente.');
     } finally {
@@ -42,20 +43,20 @@ export default function Login() {
   return (
     <div className="login-page">
       <div className="login-container">
-        <h2 className="login-title">
-          Formulário de login
-        </h2>
+        <h1 className="login-title">Bem-vindo</h1>
+        <p className="login-subtitle">Faça login para continuar</p>
         
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <div className="input-label">
-              <svg className="w-[0.3rem] h-[0.3rem]" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
-              <span>Login</span>
+              <span>E-mail</span>
             </div>
             <input
               type="email"
+              placeholder="Digite seu e-mail"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -69,13 +70,14 @@ export default function Login() {
 
           <div className="form-group">
             <div className="input-label">
-              <svg className="w-[0.3rem] h-[0.3rem]" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
               <span>Senha</span>
             </div>
             <input
               type="password"
+              placeholder="Digite sua senha"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -84,6 +86,14 @@ export default function Login() {
               disabled={isLoading}
               autoComplete="current-password"
             />
+          </div>
+
+          <div className="form-footer">
+            <label className="remember-me">
+              <input type="checkbox" />
+              Lembrar-me
+            </label>
+            <a href="#" className="forgot-password">Esqueceu a senha?</a>
           </div>
 
           {error && (
@@ -106,7 +116,7 @@ export default function Login() {
                 Entrando...
               </span>
             ) : (
-              'Acessar'
+              'LOGIN'
             )}
           </button>
         </form>
