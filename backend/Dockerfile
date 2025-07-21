@@ -17,5 +17,9 @@ RUN npm run build
 # Expor a porta que o NestJS usa
 EXPOSE 3003
 
-# Comando para iniciar a aplicação
-CMD ["npm", "start"]
+# Copiar script de inicialização
+COPY start-with-seed.sh /app/start-with-seed.sh
+RUN chmod +x /app/start-with-seed.sh
+
+# Comando para iniciar a aplicação com seed
+CMD ["/app/start-with-seed.sh"]

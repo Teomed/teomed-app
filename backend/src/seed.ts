@@ -18,17 +18,16 @@ async function seedAuthUsers() {
     const database = client.db();
     const authCollection = database.collection('auths');
 
-    const existingUsersCount = await authCollection.countDocuments();
-    if (existingUsersCount >= 3) {
-      console.log('Já existem 3 ou mais usuários cadastrados. Ignorando seeding.');
-      return;
-    }
+    // Limpar usuários existentes para garantir que tenhamos os usuários corretos
+    await authCollection.deleteMany({});
+    console.log('Usuários existentes removidos.');
+
 
     // IMPORTANTE: Em produção, estes dados devem vir de variáveis de ambiente
     const usersToSeed: UserSeed[] = [
-      { email: 'admin@teomed.com', password: 'senha123forte' },
-      { email: 'medico@teomed.com', password: 'minhasenhaunica' },
-      { email: 'gestor@teomed.com', password: 'acessoteomedapp' }
+      { email: 'jllcorrea50@gmail.com', password: 'Anatomia531@' },
+      { email: 'relacionamento.teomed@gmail.com', password: 'Anatomia532@' },
+      { email: 'renataellenoliveira@gmail.com', password: 'Anatomia533@' }
     ];
 
     for (const user of usersToSeed) {
