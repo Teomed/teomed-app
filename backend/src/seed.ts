@@ -4,17 +4,42 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
+// Função para aguardar um tempo específico
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 interface UserSeed {
   email: string;
   password: string;
 }
 
 async function seedAuthUsers() {
-  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/teomed';
+  const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/teomed-db';
   const client = new MongoClient(uri);
-
+  
+  // Tentativas de conexão
+  let connected = false;
+  let attempts = 0;
+  const maxAttempts = 10;
+  
+  while (!connected && attempts < maxAttempts) {
+    try {
+      console.log(`Tentativa ${attempts + 1} de conexão com MongoDB em ${uri}`);
+      await client.connect();
+      connected = true;
+      console.log('Conectado ao MongoDB com sucesso!');
+    } catch (error) {
+      attempts++;
+      console.log(`Falha na conexão. Tentando novamente em 3 segundos... (${attempts}/${maxAttempts})`);
+      await sleep(3000);
+    }
+  }
+  
+  if (!connected) {
+    console.error(`Falha ao conectar ao MongoDB após ${maxAttempts} tentativas. Abortando.`);
+    process.exit(1);
+  }
+  
   try {
-    await client.connect();
     const database = client.db();
     const authCollection = database.collection('auths');
 

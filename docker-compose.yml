@@ -26,8 +26,23 @@ services:
     environment:
       - PORT=3003
       - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongodb:27017/teomed-db
+      - JWT_SECRET=seu_jwt_secret_aqui_mude_em_producao
+    depends_on:
+      - mongodb
     volumes:
       - ./backend:/app
       - /app/node_modules
       - /app/dist
     restart: unless-stopped
+    
+  mongodb:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
