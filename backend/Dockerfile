@@ -22,4 +22,4 @@ COPY start-with-seed.sh /app/start-with-seed.sh
 RUN chmod +x /app/start-with-seed.sh
 
 # Comando para iniciar a aplicação com seed
-CMD ["/app/start-with-seed.sh"]
+CMD ["sh", "/app/start-with-seed.sh"]

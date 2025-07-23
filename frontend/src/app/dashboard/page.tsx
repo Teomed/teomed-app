@@ -22,18 +22,33 @@ export default function Dashboard(): ReactElement {
 
   const fetchApplications = async (token: string) => {
     try {
-      const response = await fetch('/api/applications', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003';
+      const response = await fetch(`${apiUrl}/applications`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          // Token inválido, redirecionar para login
+          localStorage.removeItem('token');
+          router.push('/login');
+          return;
+        }
         throw new Error('Falha ao carregar aplicações');
       }
 
       const data = await response.json();
-      setApplications(data);
+      // Mapear os dados do backend para o formato esperado pelo frontend
+      const mappedApplications = data.map((app: any) => ({
+        id: app._id,
+        name: app.name,
+        description: app.description || 'Sem descrição',
+        status: 'active', // Backend não tem status, assumir ativo
+        createdAt: app.uploadedAt || app.createdAt || new Date().toISOString(),
+      }));
+      setApplications(mappedApplications);
     } catch (error) {
       console.error('Erro:', error);
     } finally {

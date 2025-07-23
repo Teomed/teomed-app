@@ -9,7 +9,7 @@ import { ApplicationsModule } from './applications/applications.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27017/teomed'),
+    MongooseModule.forRoot(process.env.MONGODB_URI || 'mongodb://localhost:27017/teomed-db'),
     AuthModule,
     ApplicationsModule,
   ],

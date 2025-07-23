@@ -17,7 +17,8 @@ export default function Login() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003';
+      const response = await fetch(`${apiUrl}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,7 +27,8 @@ export default function Login() {
       });
 
       if (!response.ok) {
-        throw new Error('Email ou senha inválidos');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Email ou senha inválidos');
       }
 
       const data = await response.json();
