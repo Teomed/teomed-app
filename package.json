@@ -1,0 +1,13 @@
+{
+  "name": "teomed-app",
+  "version": "1.0.0",
+  "description": "Teomed Application - Backend API",
+  "scripts": {
+    "build": "cd backend && npm install && npm run build",
+    "start": "cd backend && node dist/seed.js && npm start",
+    "install": "cd backend && npm install"
+  },
+  "engines": {
+    "node": "18"
+  }
+} 
