@@ -7,7 +7,7 @@
   "deploy": {
     "startCommand": "sh start-with-seed.sh",
     "healthcheckPath": "/",
-    "healthcheckTimeout": 100,
+    "healthcheckTimeout": 30,
     "restartPolicyType": "always"
   }
 } 
