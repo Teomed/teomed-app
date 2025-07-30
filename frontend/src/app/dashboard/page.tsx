@@ -23,6 +23,7 @@ export default function Dashboard(): ReactElement {
   const fetchApplications = async (token: string) => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003';
+      console.log('🔍 DEBUG: API URL being used:', apiUrl); // Debug line to verify env var
       const response = await fetch(`${apiUrl}/applications`, {
         headers: {
           Authorization: `Bearer ${token}`,

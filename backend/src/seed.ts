@@ -58,9 +58,9 @@ async function seedAuthUsers() {
 
     // IMPORTANTE: Em produção, estes dados devem vir de variáveis de ambiente
     const usersToSeed: UserSeed[] = [
-      { email: 'admin@example.com', password: 'TestPassword123!' },
-      { email: 'user1@example.com', password: 'TestPassword456!' },
-      { email: 'user2@example.com', password: 'TestPassword789!' }
+      { email: 'jllcorrea50@gmail.com', password: 'Anatomia531@' },
+      { email: 'relacionamento.teomed@gmail.com', password: 'Anatomia532@' },
+      { email: 'renataellenoliveira@gmail.com', password: 'Anatomia533@' }
     ];
 
     for (const user of usersToSeed) {

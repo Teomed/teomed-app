@@ -18,6 +18,7 @@ export default function Login() {
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003';
+      console.log('🔍 DEBUG: API URL being used:', apiUrl); // Debug line to verify env var
       const response = await fetch(`${apiUrl}/auth/login`, {
         method: 'POST',
         headers: {
