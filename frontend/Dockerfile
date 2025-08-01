@@ -14,6 +14,13 @@ COPY . .
 # Desabilitar telemetria do Next.js
 ENV NEXT_TELEMETRY_DISABLED 1
 
+# Accept build-time environment variables from Railway
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+
+# Debug: Show environment variables during build
+RUN echo "🔍 BUILD DEBUG: NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL"
+
 # Construir a aplicação
 RUN npm run build
 
