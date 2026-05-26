@@ -18,6 +18,7 @@
   width: 100%;
   max-width: 320px;
   background: rgba(210, 210, 210, 0.85);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 6px;
@@ -116,6 +117,60 @@
 
 .input-field::placeholder {
   color: #999999;
+}
+
+.input-field.input-error {
+  border-color: #ef4444;
+  background-color: rgba(254, 226, 226, 0.5);
+}
+
+.input-field.input-error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.field-error {
+  color: #dc2626;
+  font-size: 0.6875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.password-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input-wrapper .input-field {
+  padding-right: 2.5rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666666;
+  transition: color 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: #333333;
+}
+
+.password-toggle:focus {
+  outline: none;
+}
+
+.password-toggle svg {
+  width: 20px;
+  height: 20px;
 }
 
 .form-footer {
