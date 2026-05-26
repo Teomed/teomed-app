@@ -64,6 +64,13 @@ export default function Login() {
 
       const data = await response.json();
       
+      // Verificar se requer setup MFA obrigatório
+      if (data.requiresMfaSetup) {
+        localStorage.setItem('token', data.setupToken);
+        window.location.href = '/settings/security?setup=required';
+        return;
+      }
+      
       // Verificar se requer MFA
       if (data.requires2FA) {
         setRequires2FA(true);

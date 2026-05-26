@@ -45,7 +45,20 @@ export class AuthService {
       };
     }
 
-    // Login normal sem MFA
+    // MFA OBRIGATÓRIO: Se não estiver ativo, forçar setup
+    if (!user.twoFactorEnabled) {
+      const setupPayload = { 
+        sub: user._id.toString(), 
+        email: user.email,
+        requiresSetup: true 
+      };
+      return {
+        requiresMfaSetup: true,
+        setupToken: this.jwtService.sign(setupPayload, { expiresIn: '30m' }),
+      };
+    }
+
+    // Login normal (não deve chegar aqui com MFA obrigatório)
     const payload = { sub: user._id.toString(), email: user.email };
     return {
       access_token: this.jwtService.sign(payload),

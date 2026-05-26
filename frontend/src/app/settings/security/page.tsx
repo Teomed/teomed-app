@@ -17,9 +17,16 @@ export default function SecuritySettings() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [backupCodesCount, setBackupCodesCount] = useState(0);
+  const [isRequired, setIsRequired] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
+    // Verificar se setup é obrigatório
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('setup') === 'required') {
+      setIsRequired(true);
+      handleSetupMfa(); // Abrir modal automaticamente
+    }
     checkMfaStatus();
   }, []);
 
@@ -161,6 +168,12 @@ export default function SecuritySettings() {
   };
 
   const closeSetupModal = () => {
+    // Se setup é obrigatório, não permitir fechar sem ativar
+    if (isRequired && !mfaEnabled) {
+      setError('Você precisa ativar a autenticação em dois fatores para continuar');
+      return;
+    }
+    
     setShowSetupModal(false);
     setQrCode('');
     setSecret('');
@@ -168,6 +181,11 @@ export default function SecuritySettings() {
     setBackupCodes([]);
     setError('');
     setSuccess('');
+    
+    // Se era obrigatório e foi ativado, redirecionar para dashboard
+    if (isRequired && mfaEnabled) {
+      router.push('/dashboard');
+    }
   };
 
   if (isLoading && !showSetupModal) {
@@ -182,10 +200,17 @@ export default function SecuritySettings() {
     <div className="security-page">
       <div className="security-container">
         <div className="security-header">
-          <button onClick={() => router.push('/dashboard')} className="back-button">
-            ← Voltar
-          </button>
+          {!isRequired && (
+            <button onClick={() => router.push('/dashboard')} className="back-button">
+              ← Voltar
+            </button>
+          )}
           <h1>Configurações de Segurança</h1>
+          {isRequired && !mfaEnabled && (
+            <div className="required-notice">
+              ⚠️ Configuração obrigatória
+            </div>
+          )}
         </div>
 
         <div className="security-card">

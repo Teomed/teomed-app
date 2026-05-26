@@ -47,8 +47,36 @@ export default function Dashboard(): ReactElement {
       setUserEmail(decoded.email);
     }
 
+    // Verificar se precisa configurar MFA
+    if (decoded && decoded.requiresSetup) {
+      router.push('/settings/security?setup=required');
+      return;
+    }
+
     fetchApplications(token);
+    checkMfaStatus(token);
   }, [router]);
+
+  const checkMfaStatus = async (token: string) => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003';
+      const response = await fetch(`${apiUrl}/auth/2fa-status`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Se MFA não estiver ativo, redirecionar para setup obrigatório
+        if (!data.enabled) {
+          router.push('/settings/security?setup=required');
+        }
+      }
+    } catch (error) {
+      console.error('Erro ao verificar status MFA:', error);
+    }
+  };
 
   const fetchApplications = async (token: string) => {
     try {
