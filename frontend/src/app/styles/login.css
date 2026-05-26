@@ -273,3 +273,121 @@
     transform: rotate(360deg);
   }
 }
+
+/* MFA Modal */
+.modal-overlay-mfa {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+}
+
+.modal-content-mfa {
+  background: rgba(210, 210, 210, 0.95);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.mfa-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333333;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.mfa-subtitle {
+  font-size: 0.875rem;
+  color: #666666;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.mfa-input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.5rem;
+  text-align: center;
+  letter-spacing: 0.5rem;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  font-family: 'Courier New', monospace;
+  margin-bottom: 1rem;
+  transition: border-color 0.2s;
+}
+
+.mfa-input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.mfa-button {
+  width: 100%;
+  padding: 0.875rem;
+  background-color: #2563eb;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-bottom: 0.75rem;
+}
+
+.mfa-button:hover:not(:disabled) {
+  background-color: #1d4ed8;
+}
+
+.mfa-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.backup-code-toggle {
+  width: 100%;
+  padding: 0.75rem;
+  background: none;
+  color: #2563eb;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: 1px solid rgba(37, 99, 235, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 0.75rem;
+}
+
+.backup-code-toggle:hover {
+  background-color: rgba(37, 99, 235, 0.05);
+  border-color: #2563eb;
+}
+
+.cancel-mfa {
+  width: 100%;
+  padding: 0.75rem;
+  background: none;
+  color: #666666;
+  font-size: 0.8125rem;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.cancel-mfa:hover {
+  color: #333333;
+}

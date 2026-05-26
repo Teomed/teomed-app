@@ -11,6 +11,10 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [requires2FA, setRequires2FA] = useState(false);
+  const [tempToken, setTempToken] = useState('');
+  const [mfaCode, setMfaCode] = useState('');
+  const [showBackupCode, setShowBackupCode] = useState(false);
   const router = useRouter();
 
   const validateEmail = (email: string) => {
@@ -59,11 +63,57 @@ export default function Login() {
       }
 
       const data = await response.json();
+      
+      // Verificar se requer MFA
+      if (data.requires2FA) {
+        setRequires2FA(true);
+        setTempToken(data.tempToken);
+        setIsLoading(false);
+        return;
+      }
+      
       localStorage.setItem('token', data.access_token);
       // Usar replace em vez de push para evitar problemas de navegação
       window.location.href = '/dashboard';
     } catch (err) {
       setError('Email ou senha inválidos. Por favor, tente novamente.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleVerifyMfa = async () => {
+    if (mfaCode.length !== 6 && mfaCode.length !== 8) {
+      setError('Código inválido');
+      return;
+    }
+
+    setError('');
+    setIsLoading(true);
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003';
+      const response = await fetch(`${apiUrl}/auth/verify-2fa`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          tempToken,
+          token: mfaCode,
+          isBackupCode: showBackupCode,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Código inválido');
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.access_token);
+      window.location.href = '/dashboard';
+    } catch (err) {
+      setError('Código inválido. Tente novamente.');
     } finally {
       setIsLoading(false);
     }
@@ -172,6 +222,66 @@ export default function Login() {
           </button>
         </form>
       </div>
+
+      {/* Modal MFA */}
+      {requires2FA && (
+        <div className="modal-overlay-mfa">
+          <div className="modal-content-mfa">
+            <h2 className="mfa-title">Autenticação em Dois Fatores</h2>
+            <p className="mfa-subtitle">
+              Digite o código de 6 dígitos do seu aplicativo autenticador
+            </p>
+
+            <input
+              type="text"
+              value={mfaCode}
+              onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').slice(0, showBackupCode ? 8 : 6))}
+              placeholder={showBackupCode ? "00000000" : "000000"}
+              className="mfa-input"
+              maxLength={showBackupCode ? 8 : 6}
+              autoFocus
+            />
+
+            {error && (
+              <div className="error-message">
+                {error}
+              </div>
+            )}
+
+            <button
+              onClick={handleVerifyMfa}
+              disabled={isLoading || (showBackupCode ? mfaCode.length !== 8 : mfaCode.length !== 6)}
+              className="mfa-button"
+            >
+              {isLoading ? 'Verificando...' : 'Verificar'}
+            </button>
+
+            <button
+              onClick={() => {
+                setShowBackupCode(!showBackupCode);
+                setMfaCode('');
+                setError('');
+              }}
+              className="backup-code-toggle"
+            >
+              {showBackupCode ? 'Usar código do autenticador' : 'Usar código de backup'}
+            </button>
+
+            <button
+              onClick={() => {
+                setRequires2FA(false);
+                setTempToken('');
+                setMfaCode('');
+                setShowBackupCode(false);
+                setError('');
+              }}
+              className="cancel-mfa"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

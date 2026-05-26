@@ -11,6 +11,15 @@ export class Auth {
   @Prop({ required: true })
   passwordHash: string;
 
+  @Prop({ default: false })
+  twoFactorEnabled: boolean;
+
+  @Prop()
+  twoFactorSecret: string;
+
+  @Prop({ type: [String], default: [] })
+  backupCodes: string[];
+
   @Prop({ default: Date.now })
   createdAt: Date;
 }
