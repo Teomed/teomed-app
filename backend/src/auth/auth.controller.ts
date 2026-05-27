@@ -67,4 +67,10 @@ export class AuthController {
   async getTwoFactorStatus(@Request() req) {
     return this.authService.getTwoFactorStatus(req.user.userId);
   }
+
+  @Get('2fa-debug')
+  @UseGuards(JwtAuthGuard)
+  async debugTwoFactor(@Request() req) {
+    return this.authService.debugTwoFactor(req.user.userId);
+  }
 }

@@ -202,4 +202,29 @@ export class AuthService {
       backupCodesCount: user.backupCodes?.length || 0,
     };
   }
+
+  async debugTwoFactor(userId: string) {
+    const user = await this.authModel.findById(userId);
+    if (!user) {
+      throw new UnauthorizedException('Usuário não encontrado');
+    }
+
+    const speakeasy = require('speakeasy');
+    const currentToken = user.twoFactorSecret ? speakeasy.totp({
+      secret: user.twoFactorSecret,
+      encoding: 'base32',
+    }) : null;
+
+    return {
+      userId: user._id,
+      email: user.email,
+      twoFactorEnabled: user.twoFactorEnabled,
+      hasSecret: !!user.twoFactorSecret,
+      secretLength: user.twoFactorSecret?.length || 0,
+      secretPreview: user.twoFactorSecret?.substring(0, 10) + '...',
+      currentToken,
+      serverTime: new Date().toISOString(),
+      timestamp: Date.now(),
+    };
+  }
 }
