@@ -120,21 +120,43 @@ export class AuthService {
   }
 
   async verifyTwoFactor(tempToken: string, token: string, isBackupCode: boolean = false) {
+    console.log('🔐 verifyTwoFactor chamado');
+    console.log('  tempToken (primeiros 20 chars):', tempToken?.substring(0, 20) + '...');
+    console.log('  token:', token);
+    console.log('  isBackupCode:', isBackupCode);
+    
     let decoded;
     try {
       decoded = this.jwtService.verify(tempToken);
-    } catch {
+      console.log('✅ Token decodificado:', {
+        sub: decoded.sub,
+        email: decoded.email,
+        temp: decoded.temp,
+        exp: decoded.exp,
+        iat: decoded.iat
+      });
+    } catch (error) {
+      console.log('❌ Erro ao verificar token:', error.message);
       throw new UnauthorizedException('Token temporário inválido ou expirado');
     }
 
     if (!decoded.temp) {
+      console.log('❌ Token não é temporário');
       throw new UnauthorizedException('Token inválido');
     }
 
     const user = await this.authModel.findById(decoded.sub);
-    if (!user || !user.twoFactorEnabled) {
+    if (!user) {
+      console.log('❌ Usuário não encontrado:', decoded.sub);
+      throw new UnauthorizedException('Usuário não encontrado');
+    }
+    
+    if (!user.twoFactorEnabled) {
+      console.log('❌ MFA não está habilitado para usuário:', user.email);
       throw new UnauthorizedException('MFA não configurado');
     }
+    
+    console.log('✅ Usuário encontrado:', user.email);
 
     let isValid = false;
 
