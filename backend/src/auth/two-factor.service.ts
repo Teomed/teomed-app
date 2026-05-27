@@ -52,7 +52,7 @@ export class TwoFactorService {
     console.log('  Resultado da verificação:', result);
     
     if (!result) {
-      // Tentar com windows maiores para debug
+      // Tentar com windows maiores (ex.: clock skew em produção)
       const resultWindow5 = speakeasy.totp.verify({
         secret,
         encoding: 'base32',
@@ -60,9 +60,10 @@ export class TwoFactorService {
         window: 5,
       });
       console.log('  Resultado com window=5:', resultWindow5);
+      return resultWindow5;
     }
     
-    return result;
+    return true;
   }
 
   generateBackupCodes(count: number = 10): string[] {

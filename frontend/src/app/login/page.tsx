@@ -75,6 +75,7 @@ export default function Login() {
       if (data.requires2FA) {
         setRequires2FA(true);
         setTempToken(data.tempToken);
+        sessionStorage.setItem('mfa_temp_token', data.tempToken);
         setIsLoading(false);
         return;
       }
@@ -99,6 +100,12 @@ export default function Login() {
     setIsLoading(true);
 
     try {
+      const storedTempToken = sessionStorage.getItem('mfa_temp_token') || '';
+      const tokenToUse = tempToken || storedTempToken;
+      if (!tokenToUse) {
+        throw new Error('Sessão de autenticação expirada. Faça login novamente.');
+      }
+
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003';
       const response = await fetch(`${apiUrl}/auth/verify-2fa`, {
         method: 'POST',
@@ -106,21 +113,35 @@ export default function Login() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          tempToken,
+          tempToken: tokenToUse,
           token: mfaCode,
           isBackupCode: showBackupCode,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Código inválido');
+        let message = 'Falha ao verificar código';
+        try {
+          const errorData = await response.json();
+          const raw = errorData?.message;
+          if (Array.isArray(raw)) {
+            message = raw.join(', ');
+          } else if (typeof raw === 'string' && raw.trim().length > 0) {
+            message = raw;
+          }
+        } catch {
+          // ignore
+        }
+        throw new Error(message);
       }
 
       const data = await response.json();
       localStorage.setItem('token', data.access_token);
+      sessionStorage.removeItem('mfa_temp_token');
       window.location.href = '/dashboard';
     } catch (err) {
-      setError('Código inválido. Tente novamente.');
+      const message = err instanceof Error ? err.message : 'Erro ao verificar código';
+      setError(message);
     } finally {
       setIsLoading(false);
     }
@@ -281,6 +302,7 @@ export default function Login() {
                 setMfaCode('');
                 setShowBackupCode(false);
                 setError('');
+                sessionStorage.removeItem('mfa_temp_token');
               }}
               className="cancel-mfa"
             >

@@ -41,7 +41,7 @@ export class AuthService {
       };
       return {
         requires2FA: true,
-        tempToken: this.jwtService.sign(tempPayload, { expiresIn: '5m' }),
+        tempToken: this.jwtService.sign(tempPayload, { expiresIn: '10m' }),
       };
     }
 
@@ -127,7 +127,7 @@ export class AuthService {
     
     let decoded;
     try {
-      decoded = this.jwtService.verify(tempToken);
+      decoded = this.jwtService.verify(tempToken, { clockTolerance: 60 });
       console.log('✅ Token decodificado:', {
         sub: decoded.sub,
         email: decoded.email,
@@ -175,7 +175,7 @@ export class AuthService {
     }
 
     if (!isValid) {
-      throw new UnauthorizedException('Código inválido');
+      throw new BadRequestException('Código inválido');
     }
 
     // Gerar JWT definitivo
