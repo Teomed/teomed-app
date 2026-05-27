@@ -12,6 +12,7 @@ export default function Dashboard(): ReactElement {
   const [editingApp, setEditingApp] = useState<Application | null>(null);
   const [formData, setFormData] = useState({ name: '', description: '' });
   const [userEmail, setUserEmail] = useState<string>('');
+  const [showMfaBanner, setShowMfaBanner] = useState(false);
   const router = useRouter();
 
   const ADMIN_EMAIL = 'jllcorrea50@gmail.com';
@@ -39,6 +40,12 @@ export default function Dashboard(): ReactElement {
     if (!token) {
       router.push('/login');
       return;
+    }
+
+    // Verificar se MFA está pendente
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('mfa_pending') === 'true') {
+      setShowMfaBanner(true);
     }
 
     // Decodificar token para obter email do usuário
@@ -251,6 +258,30 @@ export default function Dashboard(): ReactElement {
           </div>
         </div>
       </header>
+      
+      {showMfaBanner && (
+        <div className="mfa-banner">
+          <div className="mfa-banner-content">
+            <div className="mfa-banner-icon">⚠️</div>
+            <div className="mfa-banner-text">
+              <strong>Ação Necessária:</strong> Configure a autenticação em dois fatores para maior segurança da sua conta.
+            </div>
+            <button 
+              onClick={() => router.push('/settings/security?setup=required')}
+              className="mfa-banner-button"
+            >
+              Configurar Agora
+            </button>
+            <button 
+              onClick={() => setShowMfaBanner(false)}
+              className="mfa-banner-close"
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+      )}
+      
       <main className="dashboard-main">
         <div className="main-header">
           <h2 className="page-title">Aplicações</h2>

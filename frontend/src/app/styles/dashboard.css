@@ -59,6 +59,82 @@
   height: 20px;
 }
 
+/* MFA Banner */
+.mfa-banner {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-bottom: 2px solid #f59e0b;
+  padding: 16px 24px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.mfa-banner-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mfa-banner-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.mfa-banner-text {
+  flex: 1;
+  color: #92400e;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.mfa-banner-text strong {
+  font-weight: 600;
+}
+
+.mfa-banner-button {
+  background-color: #f59e0b;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  white-space: nowrap;
+}
+
+.mfa-banner-button:hover {
+  background-color: #d97706;
+}
+
+.mfa-banner-close {
+  background: none;
+  border: none;
+  color: #92400e;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+
+.mfa-banner-close:hover {
+  background-color: rgba(146, 64, 14, 0.1);
+}
+
 .app-title {
   font-size: 36px;
   font-weight: 600;

@@ -168,12 +168,6 @@ export default function SecuritySettings() {
   };
 
   const closeSetupModal = () => {
-    // Se setup é obrigatório, não permitir fechar sem ativar
-    if (isRequired && !mfaEnabled) {
-      setError('Você precisa ativar a autenticação em dois fatores para continuar');
-      return;
-    }
-    
     setShowSetupModal(false);
     setQrCode('');
     setSecret('');
@@ -182,8 +176,10 @@ export default function SecuritySettings() {
     setError('');
     setSuccess('');
     
-    // Se era obrigatório e foi ativado, redirecionar para dashboard
-    if (isRequired && mfaEnabled) {
+    // Se era obrigatório, redirecionar para dashboard com aviso
+    if (isRequired && !mfaEnabled) {
+      router.push('/dashboard?mfa_pending=true');
+    } else if (isRequired && mfaEnabled) {
       router.push('/dashboard');
     }
   };
