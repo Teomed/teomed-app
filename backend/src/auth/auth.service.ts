@@ -184,10 +184,18 @@ export class AuthService {
   }
 
   async getTwoFactorStatus(userId: string) {
+    console.log('📊 getTwoFactorStatus chamado para userId:', userId);
+    
     const user = await this.authModel.findById(userId);
     if (!user) {
+      console.log('❌ Usuário não encontrado:', userId);
       throw new UnauthorizedException('Usuário não encontrado');
     }
+
+    console.log('✅ Status MFA:', {
+      enabled: user.twoFactorEnabled,
+      backupCodesCount: user.backupCodes?.length || 0
+    });
 
     return {
       enabled: user.twoFactorEnabled || false,

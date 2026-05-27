@@ -19,6 +19,24 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return { userId: payload.sub };
+    console.log('🔑 JWT Strategy - Validando payload:', {
+      sub: payload.sub,
+      email: payload.email,
+      temp: payload.temp,
+      requiresSetup: payload.requiresSetup,
+      exp: payload.exp,
+      iat: payload.iat
+    });
+    
+    // Aceitar tokens temporários (temp) e de setup (requiresSetup)
+    const user = { 
+      userId: payload.sub,
+      email: payload.email,
+      temp: payload.temp,
+      requiresSetup: payload.requiresSetup
+    };
+    
+    console.log('✅ JWT Strategy - Usuário validado:', user);
+    return user;
   }
 }
