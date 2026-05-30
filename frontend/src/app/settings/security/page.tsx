@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import '../../styles/security.css';
-import { Button, Container, Card } from '@/design-system2';
+import { Button, Container, Card } from '@/design-system';
 
 export default function SecuritySettings() {
   const [mfaEnabled, setMfaEnabled] = useState(false);

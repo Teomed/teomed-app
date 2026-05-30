@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { ReactElement, JSX } from 'react';
 import { Application } from './types';
-import { Button, Card, Container } from '@/design-system2';
+import { Button, Card, Container } from '@/design-system';
 
 export default function Dashboard(): ReactElement {
   const [applications, setApplications] = useState<Application[]>([]);
