@@ -337,15 +337,17 @@ export default function SecuritySettings() {
                     <h4>2. Ou digite o código manualmente</h4>
                     <div className="secret-code">
                       <code>{secret}</code>
-                      <button
+                      <Button
                         onClick={() => {
                           navigator.clipboard.writeText(secret);
                           setSuccess('Código copiado!');
                         }}
+                        variant="secondary"
+                        size="small"
                         className="btn-copy"
                       >
                         Copiar
-                      </button>
+                      </Button>
                     </div>
                   </div>
 
