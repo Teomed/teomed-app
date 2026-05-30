@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { ReactElement, JSX } from 'react';
 import { Application } from './types';
-import { Button, Container } from '@/design-system';
+import { Button, Card, Container } from '@/design-system';
 
 export default function Dashboard(): ReactElement {
   const [applications, setApplications] = useState<Application[]>([]);
@@ -255,49 +255,53 @@ export default function Dashboard(): ReactElement {
       )}
       
       <main className="dashboard-main">
-        <div className="main-header">
-          <h2 className="page-title">Aplicações</h2>
-        </div>
-        {applications.length === 0 ? (
-          <div className="empty-state">
-            <p className="empty-text">Nenhuma aplicação cadastrada.</p>
+        <Container>
+          <div className="main-header">
+            <h2 className="page-title">Aplicações</h2>
           </div>
-        ) : (
-          <div className="app-grid">
-            {applications.map((app) => (
-              <div key={app.id}>
-                {(() => {
-                  const Wrapper: any = app.url ? 'a' : 'div';
-                  const wrapperProps = app.url
-                    ? {
-                        href: app.url,
-                        target: '_blank',
-                        rel: 'noopener noreferrer',
-                      }
-                    : {};
-                  return (
-                    <Wrapper className="app-card" {...wrapperProps}>
-                <h3 className="app-name">{app.name}</h3>
-                <p className="app-description">{app.description}</p>
-                <div className="card-footer">
-                  <span className="app-date">
-                    {new Date(app.createdAt).toLocaleDateString('pt-BR')}
-                  </span>
-                  <div>
-                    <span
-                      className={`status-badge ${app.status === 'active' ? 'status-active' : 'status-inactive'}`}
-                    >
-                      {app.status === 'active' ? 'Ativo' : 'Inativo'}
-                    </span>
-                  </div>
+          {applications.length === 0 ? (
+            <div className="empty-state">
+              <p className="empty-text">Nenhuma aplicação cadastrada.</p>
+            </div>
+          ) : (
+            <div className="app-grid">
+              {applications.map((app) => (
+                <div key={app.id}>
+                  {(() => {
+                    const Wrapper: any = app.url ? 'a' : 'div';
+                    const wrapperProps = app.url
+                      ? {
+                          href: app.url,
+                          target: '_blank',
+                          rel: 'noopener noreferrer',
+                        }
+                      : {};
+                    return (
+                      <Wrapper className="app-card" {...wrapperProps}>
+                        <Card className="app-card-inner">
+                          <h3 className="app-name">{app.name}</h3>
+                          <p className="app-description">{app.description}</p>
+                          <div className="card-footer">
+                            <span className="app-date">
+                              {new Date(app.createdAt).toLocaleDateString('pt-BR')}
+                            </span>
+                            <div>
+                              <span
+                                className={`status-badge ${app.status === 'active' ? 'status-active' : 'status-inactive'}`}
+                              >
+                                {app.status === 'active' ? 'Ativo' : 'Inativo'}
+                              </span>
+                            </div>
+                          </div>
+                        </Card>
+                      </Wrapper>
+                    );
+                  })()}
                 </div>
-                    </Wrapper>
-                  );
-                })()}
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </Container>
       </main>
     </div>
   );
