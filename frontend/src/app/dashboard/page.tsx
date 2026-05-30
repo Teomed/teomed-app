@@ -54,12 +54,6 @@ export default function Dashboard(): ReactElement {
       setUserEmail(decoded.email);
     }
 
-    // Verificar se precisa configurar MFA
-    if (decoded && decoded.requiresSetup) {
-      router.push('/settings/security?setup=required');
-      return;
-    }
-
     fetchApplications(token);
     checkMfaStatus(token);
   }, [router]);
@@ -72,6 +66,12 @@ export default function Dashboard(): ReactElement {
           Authorization: `Bearer ${token}`,
         },
       });
+
+      if (response.status === 401) {
+        localStorage.removeItem('token');
+        router.push('/login');
+        return;
+      }
 
       if (response.ok) {
         const data = await response.json();
