@@ -1,6 +1,7 @@
 import React from 'react';
 
 export interface HeroProps {
+  id?: string;
   title: string;
   description?: string;
   topLabel?: {
@@ -20,6 +21,7 @@ export interface HeroProps {
  * Uses original class names: hero, hero--dark, hero__container, hero__content, hero__title, etc.
  */
 export const Hero: React.FC<HeroProps> = ({
+  id,
   title,
   description,
   topLabel,
@@ -35,6 +37,7 @@ export const Hero: React.FC<HeroProps> = ({
 
   return (
     <section
+      id={id}
       className={`hero ${variantClass} ${imageClass} hero--no-line hero--no-color-block hero--simple-image hero-floating-metrics-container hero--hub-gradient-eclipse hero--stick-right ${className}`.trim()}
     >
       <div className="hero__container">
