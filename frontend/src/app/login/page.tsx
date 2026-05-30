@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Container, Card } from '@/design-system';
+import { Button, Container, Card } from '@/design-system2';
 
 
 export default function Login() {
