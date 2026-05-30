@@ -15,8 +15,21 @@ const spacingScale = Object.fromEntries(
   Object.entries(spacing).filter(([, value]) => typeof value === 'string')
 ) as Record<string, string>;
 
+const namedSpacing = {
+  'section-mobile': spacing.section.mobile,
+  'section-desktop': spacing.section.desktop,
+  'section-large': spacing.section.large,
+  'container-horizontal': spacing.container.horizontal,
+  'hero-top': spacing.hero.top,
+  'hero-bottom': spacing.hero.bottom,
+  'card-padding': spacing.card.padding,
+} as const;
+
 export const designSystemPreset = {
   theme: {
+    screens: {
+      ...layout.breakpoints,
+    },
     extend: {
       colors: {
         primary: {
@@ -37,10 +50,19 @@ export const designSystemPreset = {
           darkGray: colors.neutral.darkGray,
           border: colors.neutral.border,
         },
+        text: {
+          ...colors.text,
+        },
+        background: {
+          ...colors.background,
+        },
       },
       fontFamily: {
         sans: typography.fontFamily.base.split(', '),
         mono: [typography.fontFamily.mono],
+      },
+      fontWeight: {
+        ...typography.fontWeight,
       },
       fontSize: {
         h1: typography.fontSize.h1,
@@ -58,6 +80,7 @@ export const designSystemPreset = {
       },
       spacing: {
         ...spacingScale,
+        ...namedSpacing,
       },
       borderRadius: {
         ...radius,
