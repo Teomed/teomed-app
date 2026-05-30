@@ -113,9 +113,13 @@ export class AuthService {
     user.backupCodes = hashedBackupCodes;
     await user.save();
 
+    // Emitir token definitivo após ativação (remove requiresSetup do fluxo obrigatório)
+    const payload = { sub: user._id.toString(), email: user.email };
+
     return {
       success: true,
       backupCodes, // Retornar códigos não hashados para o usuário salvar
+      access_token: this.jwtService.sign(payload),
     };
   }
 

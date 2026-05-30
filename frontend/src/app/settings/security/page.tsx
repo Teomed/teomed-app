@@ -25,7 +25,6 @@ export default function SecuritySettings() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('setup') === 'required') {
       setIsRequired(true);
-      handleSetupMfa(); // Abrir modal automaticamente
     }
     checkMfaStatus();
   }, []);
@@ -55,6 +54,19 @@ export default function SecuritySettings() {
         const data = await response.json();
         setMfaEnabled(data.enabled);
         setBackupCodesCount(data.backupCodesCount);
+
+        // Se setup era obrigatório mas já está habilitado, sair do fluxo
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('setup') === 'required' && data.enabled) {
+          router.push('/dashboard');
+          return;
+        }
+
+        // Se setup é obrigatório e ainda não está habilitado, iniciar setup
+        if (params.get('setup') === 'required' && !data.enabled) {
+          await handleSetupMfa();
+          return;
+        }
       }
     } catch (error) {
       console.error('Erro ao verificar status MFA:', error);
@@ -149,6 +161,11 @@ export default function SecuritySettings() {
       setMfaEnabled(true);
       setSuccess('Autenticação em dois fatores ativada com sucesso!');
       setVerificationCode('');
+
+      // Se backend devolveu token definitivo, salvar e sair do fluxo obrigatório
+      if (data.access_token) {
+        localStorage.setItem('token', data.access_token);
+      }
     } catch (error) {
       setError('Código inválido. Tente novamente.');
     } finally {
