@@ -118,43 +118,43 @@ async function seedApplications() {
     // Dados fictícios de applications
     const applicationsToSeed: ApplicationSeed[] = [
       {
-        name: 'Teomed Viewer',
-        description: 'Visualizador de imagens médicas DICOM com suporte a múltiplos formatos',
+        name: 'Teomed-Filemaker',
+        description: 'Prontuário médico completo: história clínica, exame físico, exames pré e pós-operatórios, evoluções, receitas, atestados e anexos.',
         version: '2.1.4',
         downloadUrl: 'https://download.example.com/teomed-viewer-2.1.4.zip',
         category: 'Imaging'
       },
       {
-        name: 'PatientFlow Manager',
-        description: 'Sistema de gestão de fluxo de pacientes para clínicas e hospitais',
+        name: 'Consultas Novas',
+        description: 'Controle de pacientes que passam pela consulta e seu seguimento, inclusive no pós-operatório e após a cirurgia.',
         version: '1.8.2',
         downloadUrl: 'https://download.example.com/patientflow-1.8.2.dmg',
         category: 'Management'
       },
       {
-        name: 'Lab Results Analyzer',
-        description: 'Analisador automatizado de resultados laboratoriais com IA',
+        name: 'Financeiro',
+        description: 'Gestão financeira do consultório: receitas de consultas e cirurgias, pagamentos da equipe e controle de despesas e gastos.',
         version: '3.0.1',
         downloadUrl: 'https://download.example.com/lab-analyzer-3.0.1.exe',
         category: 'Laboratory'
       },
       {
-        name: 'MedChart Mobile',
-        description: 'Aplicativo móvel para consulta de prontuários médicos',
+        name: 'Consultas-Google',
+        description: 'Captura consultas do Google Agenda e cria um banco de dados com análise de ganhos, produtividade e evolução do faturamento.',
         version: '4.2.7',
         downloadUrl: 'https://download.example.com/medchart-mobile-4.2.7.apk',
         category: 'Mobile'
       },
       {
-        name: 'Prescription Generator',
-        description: 'Gerador de prescrições médicas com banco de medicamentos atualizado',
+        name: 'Faxina',
+        description: 'Pagamento e controle da faxineira: dias trabalhados, recibos, valores e relatórios do trabalho efetuado.',
         version: '1.5.0',
         downloadUrl: 'https://download.example.com/prescription-gen-1.5.0.msi',
         category: 'Clinical'
       },
       {
-        name: 'Surgical Planner 3D',
-        description: 'Software de planejamento cirúrgico em 3D com simulação',
+        name: 'Faxina Casa',
+        description: 'Pagamento e controle da faxina da casa do Dr. José Luis: dias, recibos, valores e relatórios do trabalho efetuado.',
         version: '2.3.8',
         downloadUrl: 'https://download.example.com/surgical-planner-2.3.8.tar.gz',
         category: 'Surgery'

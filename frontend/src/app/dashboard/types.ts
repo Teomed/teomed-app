@@ -4,4 +4,5 @@ export type Application = {
   description: string;
   status: string;
   createdAt: string;
+  url?: string;
 };

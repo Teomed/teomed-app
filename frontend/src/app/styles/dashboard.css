@@ -260,6 +260,9 @@
   border: 1px solid #d1d1d1;
   border-radius: 8px;
   padding: 20px;
+  display: block;
+  text-decoration: none;
+  color: inherit;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }

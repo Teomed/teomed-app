@@ -18,6 +18,60 @@ export default function Dashboard(): ReactElement {
   const ADMIN_EMAIL = 'jllcorrea50@gmail.com';
   const isAdmin = userEmail === ADMIN_EMAIL;
 
+  const getAppOverride = (name: string) => {
+    const n = (name || '').trim().toLowerCase();
+
+    if (n === 'teomed viewer') {
+      return {
+        name: 'Teomed-Filemaker',
+        description:
+          'Prontuário médico completo: história clínica, exame físico, exames pré e pós-operatórios, evoluções, receitas, atestados e anexos.',
+      };
+    }
+
+    if (n === 'patientflow manager' || n === 'patient flow manager') {
+      return {
+        name: 'Consultas Novas',
+        description:
+          'Controle de pacientes que passam pela consulta e seu seguimento, inclusive no pós-operatório e após a cirurgia.',
+      };
+    }
+
+    if (n === 'lab results analyzer' || n === 'lab results analyser') {
+      return {
+        name: 'Financeiro',
+        description:
+          'Gestão financeira do consultório: receitas de consultas e cirurgias, pagamentos da equipe e controle de despesas e gastos.',
+      };
+    }
+
+    if (n === 'medchart mobile' || n === 'medchat mobile') {
+      return {
+        name: 'Consultas-Google',
+        description:
+          'Captura consultas do Google Agenda e cria um banco de dados com análise de ganhos, produtividade e evolução do faturamento.',
+      };
+    }
+
+    if (n === 'prescription generator') {
+      return {
+        name: 'Faxina',
+        description:
+          'Pagamento e controle da faxineira: dias trabalhados, recibos, valores e relatórios do trabalho efetuado.',
+      };
+    }
+
+    if (n === 'surgical planner 3d') {
+      return {
+        name: 'Faxina Casa',
+        description:
+          'Pagamento e controle da faxina da casa do Dr. José Luis: dias, recibos, valores e relatórios do trabalho efetuado.',
+      };
+    }
+
+    return null;
+  };
+
   const decodeToken = (token: string) => {
     try {
       const base64Url = token.split('.')[1];
@@ -109,10 +163,22 @@ export default function Dashboard(): ReactElement {
       // Mapear os dados do backend para o formato esperado pelo frontend
       const mappedApplications = data.map((app: any) => ({
         id: app._id,
-        name: app.name,
-        description: app.description || 'Sem descrição',
+        name: (() => {
+          const override = getAppOverride(app.name);
+          return override?.name || app.name;
+        })(),
+        description: (() => {
+          const override = getAppOverride(app.name);
+          return override?.description || app.description || 'Sem descrição';
+        })(),
         status: 'active', // Backend não tem status, assumir ativo
         createdAt: app.uploadedAt || app.createdAt || new Date().toISOString(),
+        url:
+          typeof app.downloadUrl === 'string' &&
+          app.downloadUrl.length > 0 &&
+          !app.downloadUrl.includes('download.example.com')
+            ? app.downloadUrl
+            : undefined,
       }));
       setApplications(mappedApplications);
     } catch (error) {
@@ -299,10 +365,18 @@ export default function Dashboard(): ReactElement {
         ) : (
           <div className="app-grid">
             {applications.map((app) => (
-              <div
-                key={app.id}
-                className="app-card"
-              >
+              <div key={app.id}>
+                {(() => {
+                  const Wrapper: any = app.url ? 'a' : 'div';
+                  const wrapperProps = app.url
+                    ? {
+                        href: app.url,
+                        target: '_blank',
+                        rel: 'noopener noreferrer',
+                      }
+                    : {};
+                  return (
+                    <Wrapper className="app-card" {...wrapperProps}>
                 <h3 className="app-name">{app.name}</h3>
                 <p className="app-description">{app.description}</p>
                 <div className="card-footer">
@@ -315,24 +389,11 @@ export default function Dashboard(): ReactElement {
                     >
                       {app.status === 'active' ? 'Ativo' : 'Inativo'}
                     </span>
-                    {isAdmin && (
-                      <>
-                        <button 
-                          onClick={() => handleEditApp(app)}
-                          className="text-[#666666] hover:text-black transition-colors"
-                        >
-                          Editar
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteApp(app.id)}
-                          className="text-[#666666] hover:text-red-600 transition-colors"
-                        >
-                          Excluir
-                        </button>
-                      </>
-                    )}
                   </div>
                 </div>
+                    </Wrapper>
+                  );
+                })()}
               </div>
             ))}
           </div>
