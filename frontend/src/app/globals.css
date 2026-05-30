@@ -15,3 +15,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
 }
+
+.fdn-button:disabled,
+.fdn-button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.fdn-button--button-style-danger {
+  background-color: #dc2626;
+  color: #fff;
+  border-color: #dc2626;
+}
+
+.fdn-button--button-style-danger:hover {
+  background-color: #b91c1c;
+  border-color: #b91c1c;
+}

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import '../../styles/security.css';
+import { Button, Container, Card } from '@/design-system';
 
 export default function SecuritySettings() {
   const [mfaEnabled, setMfaEnabled] = useState(false);
@@ -242,12 +243,12 @@ export default function SecuritySettings() {
 
   return (
     <div className="security-page">
-      <div className="security-container">
+      <Container className="security-container">
         <div className="security-header">
           {!isRequired && (
-            <button onClick={() => router.push('/dashboard')} className="back-button">
+            <Button onClick={() => router.push('/dashboard')} variant="textLink" size="small" className="back-button">
               ← Voltar
-            </button>
+            </Button>
           )}
           <h1>Configurações de Segurança</h1>
           {isRequired && !mfaEnabled && (
@@ -257,7 +258,7 @@ export default function SecuritySettings() {
           )}
         </div>
 
-        <div className="security-card">
+        <Card className="security-card" hover={false}>
           <div className="card-header">
             <div>
               <h2>Autenticação em Dois Fatores (2FA)</h2>
@@ -288,25 +289,27 @@ export default function SecuritySettings() {
 
             <div className="card-actions">
               {!mfaEnabled ? (
-                <button
+                <Button
                   onClick={handleSetupMfa}
                   disabled={isLoading}
-                  className="btn-primary"
+                  variant="primary"
+                  size="small"
                 >
                   Ativar Autenticação em Dois Fatores
-                </button>
+                </Button>
               ) : (
-                <button
+                <Button
                   onClick={() => setShowDisableModal(true)}
-                  className="btn-danger"
+                  variant="danger"
+                  size="small"
                 >
                   Desativar Autenticação em Dois Fatores
-                </button>
+                </Button>
               )}
             </div>
           </div>
-        </div>
-      </div>
+        </Card>
+      </Container>
 
       {/* Modal de Configuração MFA */}
       {showSetupModal && (
@@ -368,13 +371,15 @@ export default function SecuritySettings() {
 
                   {error && <div className="error-message">{error}</div>}
 
-                  <button
+                  <Button
                     onClick={handleConfirmMfa}
                     disabled={isLoading || verificationCode.length !== 6}
-                    className="btn-primary full-width"
+                    variant="primary"
+                    size="small"
+                    className="full-width"
                   >
                     {isLoading ? 'Verificando...' : 'Ativar'}
-                  </button>
+                  </Button>
                 </>
               ) : (
                 <>
@@ -392,14 +397,14 @@ export default function SecuritySettings() {
                         <div key={index} className="backup-code">{code}</div>
                       ))}
                     </div>
-                    <button onClick={copyBackupCodes} className="btn-secondary full-width">
+                    <Button onClick={copyBackupCodes} variant="secondary" size="small" className="full-width">
                       Copiar Códigos
-                    </button>
+                    </Button>
                   </div>
 
-                  <button onClick={closeSetupModal} className="btn-primary full-width">
+                  <Button onClick={closeSetupModal} variant="primary" size="small" className="full-width">
                     Concluir
-                  </button>
+                  </Button>
                 </>
               )}
             </div>
@@ -432,19 +437,17 @@ export default function SecuritySettings() {
               {error && <div className="error-message">{error}</div>}
 
               <div className="modal-actions">
-                <button
-                  onClick={() => setShowDisableModal(false)}
-                  className="btn-secondary"
-                >
+                <Button onClick={() => setShowDisableModal(false)} variant="secondary" size="small">
                   Cancelar
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={handleDisableMfa}
                   disabled={isLoading || !password}
-                  className="btn-danger"
+                  variant="danger"
+                  size="small"
                 >
                   {isLoading ? 'Desativando...' : 'Desativar'}
-                </button>
+                </Button>
               </div>
             </div>
           </div>

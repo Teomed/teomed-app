@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Button, Container, Card } from '@/design-system';
 
 
 export default function Login() {
@@ -149,11 +150,12 @@ export default function Login() {
 
   return (
     <div className="login-page">
-      <div className="login-container">
-        <h1 className="login-title">Bem-vindo</h1>
-        <p className="login-subtitle">Faça login para continuar</p>
-        
-        <form onSubmit={handleSubmit} className="login-form">
+      <Container className="login-container">
+        <Card hover={false}>
+          <h1 className="login-title">Bem-vindo</h1>
+          <p className="login-subtitle">Faça login para continuar</p>
+          
+          <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <div className="input-label">
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -231,25 +233,18 @@ export default function Login() {
             </div>
           )}
 
-          <button
+          <Button
             type="submit"
             disabled={isLoading}
+            variant="primary"
+            size="small"
             className="submit-button"
           >
-            {isLoading ? (
-              <span className="loading-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Entrando...
-              </span>
-            ) : (
-              'LOGIN'
-            )}
-          </button>
-        </form>
-      </div>
+            {isLoading ? 'Entrando...' : 'LOGIN'}
+          </Button>
+          </form>
+        </Card>
+      </Container>
 
       {/* Modal MFA */}
       {requires2FA && (
@@ -285,26 +280,30 @@ export default function Login() {
               </div>
             )}
 
-            <button
+            <Button
               onClick={handleVerifyMfa}
               disabled={isLoading || (showBackupCode ? mfaCode.length !== 8 : mfaCode.length !== 6)}
+              variant="primary"
+              size="small"
               className="mfa-button"
             >
               {isLoading ? 'Verificando...' : 'Verificar'}
-            </button>
+            </Button>
 
-            <button
+            <Button
               onClick={() => {
                 setShowBackupCode(!showBackupCode);
                 setMfaCode('');
                 setError('');
               }}
+              variant="secondary"
+              size="small"
               className="backup-code-toggle"
             >
               {showBackupCode ? 'Usar código do autenticador' : 'Usar código de backup'}
-            </button>
+            </Button>
 
-            <button
+            <Button
               onClick={() => {
                 setRequires2FA(false);
                 setTempToken('');
@@ -313,10 +312,12 @@ export default function Login() {
                 setError('');
                 sessionStorage.removeItem('mfa_temp_token');
               }}
+              variant="textLink"
+              size="small"
               className="cancel-mfa"
             >
               Cancelar
-            </button>
+            </Button>
           </div>
         </div>
       )}

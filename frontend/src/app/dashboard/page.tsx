@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { ReactElement, JSX } from 'react';
 import { Application } from './types';
+import { Button, Container } from '@/design-system';
 
 export default function Dashboard(): ReactElement {
   const [applications, setApplications] = useState<Application[]>([]);
@@ -201,11 +202,13 @@ export default function Dashboard(): ReactElement {
   return (
     <div className="dashboard-page">
       <header className="dashboard-header">
-        <div className="header-container">
+        <Container className="header-container">
           <h1 className="app-title">Teomed</h1>
           <div className="header-actions">
-            <button
+            <Button
               onClick={() => router.push('/settings/security')}
+              variant="secondary"
+              size="small"
               className="settings-button"
               title="Configurações de Segurança"
             >
@@ -213,15 +216,17 @@ export default function Dashboard(): ReactElement {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={handleLogout}
+              variant="textLink"
+              size="small"
               className="logout-button"
             >
               Sair
-            </button>
+            </Button>
           </div>
-        </div>
+        </Container>
       </header>
       
       {showMfaBanner && (
@@ -231,12 +236,14 @@ export default function Dashboard(): ReactElement {
             <div className="mfa-banner-text">
               <strong>Ação Necessária:</strong> Configure a autenticação em dois fatores para maior segurança da sua conta.
             </div>
-            <button 
+            <Button
               onClick={() => router.push('/settings/security?setup=required')}
+              variant="primary"
+              size="small"
               className="mfa-banner-button"
             >
               Configurar Agora
-            </button>
+            </Button>
             <button 
               onClick={() => setShowMfaBanner(false)}
               className="mfa-banner-close"
