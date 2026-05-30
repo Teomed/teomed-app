@@ -238,7 +238,7 @@ export default function Login() {
             disabled={isLoading}
             variant="primary"
             size="small"
-            className="submit-button"
+            className="login-submit"
           >
             {isLoading ? 'Entrando...' : 'LOGIN'}
           </Button>
