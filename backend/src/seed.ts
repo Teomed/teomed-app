@@ -51,11 +51,6 @@ async function seedAuthUsers() {
     const database = client.db();
     const authCollection = database.collection('auths');
 
-    // Limpar usuários existentes para garantir que tenhamos os usuários corretos
-    await authCollection.deleteMany({});
-    console.log('Usuários existentes removidos.');
-
-
     // IMPORTANTE: Em produção, estes dados devem vir de variáveis de ambiente
     const usersToSeed: UserSeed[] = [
       { email: 'jllcorrea50@gmail.com', password: 'Anatomia531@' },
@@ -64,11 +59,20 @@ async function seedAuthUsers() {
     ];
 
     for (const user of usersToSeed) {
+      const existing = await authCollection.findOne({ email: user.email });
+      if (existing) {
+        console.log(`Usuário ${user.email} já existe. Mantendo dados atuais (inclui MFA).`);
+        continue;
+      }
+
       const passwordHash = await bcrypt.hash(user.password, 10);
       await authCollection.insertOne({
         email: user.email,
         passwordHash,
-        createdAt: new Date()
+        createdAt: new Date(),
+        twoFactorEnabled: false,
+        twoFactorSecret: undefined,
+        backupCodes: [],
       });
       console.log(`Usuário ${user.email} criado com sucesso.`);
     }
