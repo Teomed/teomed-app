@@ -19,6 +19,15 @@ export class TwoFactorService {
     };
   }
 
+  getOtpAuthUrl(email: string, secret: string) {
+    return speakeasy.otpauthURL({
+      secret,
+      label: `${this.APP_NAME} (${email})`,
+      issuer: this.APP_NAME,
+      encoding: 'base32',
+    });
+  }
+
   async generateQRCode(otpauthUrl: string): Promise<string> {
     try {
       return await QRCode.toDataURL(otpauthUrl);

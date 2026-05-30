@@ -71,12 +71,20 @@ export class AuthService {
       throw new UnauthorizedException('Usuário não encontrado');
     }
 
-    const { secret, otpauthUrl } = this.twoFactorService.generateSecret(user.email);
+    const secret = user.twoFactorSecret
+      ? user.twoFactorSecret
+      : this.twoFactorService.generateSecret(user.email).secret;
+
+    const otpauthUrl = user.twoFactorSecret
+      ? this.twoFactorService.getOtpAuthUrl(user.email, user.twoFactorSecret)
+      : this.twoFactorService.getOtpAuthUrl(user.email, secret);
+
     const qrCode = await this.twoFactorService.generateQRCode(otpauthUrl);
 
-    // Salvar secret temporariamente (ainda não ativado)
-    user.twoFactorSecret = secret;
-    await user.save();
+    if (!user.twoFactorSecret) {
+      user.twoFactorSecret = secret;
+      await user.save();
+    }
 
     return {
       qrCode,
