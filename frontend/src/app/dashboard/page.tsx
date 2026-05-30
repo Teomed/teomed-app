@@ -8,15 +8,9 @@ import { Application } from './types';
 export default function Dashboard(): ReactElement {
   const [applications, setApplications] = useState<Application[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [editingApp, setEditingApp] = useState<Application | null>(null);
-  const [formData, setFormData] = useState({ name: '', description: '' });
   const [userEmail, setUserEmail] = useState<string>('');
   const [showMfaBanner, setShowMfaBanner] = useState(false);
   const router = useRouter();
-
-  const ADMIN_EMAIL = 'jllcorrea50@gmail.com';
-  const isAdmin = userEmail === ADMIN_EMAIL;
 
   const getAppOverride = (name: string) => {
     const n = (name || '').trim().toLowerCase();
@@ -193,101 +187,6 @@ export default function Dashboard(): ReactElement {
     router.push('/login');
   };
 
-  const handleNewApp = () => {
-    setEditingApp(null);
-    setFormData({ name: '', description: '' });
-    setShowModal(true);
-  };
-
-  const handleEditApp = (app: Application) => {
-    setEditingApp(app);
-    setFormData({ name: app.name, description: app.description });
-    setShowModal(true);
-  };
-
-  const handleDeleteApp = async (appId: string) => {
-    if (!confirm('Tem certeza que deseja excluir esta aplicação?')) {
-      return;
-    }
-
-    try {
-      const token = localStorage.getItem('token');
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003';
-      
-      const response = await fetch(`${apiUrl}/applications/${appId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Falha ao excluir aplicação');
-      }
-
-      // Atualizar lista removendo a aplicação excluída
-      setApplications(applications.filter(app => app.id !== appId));
-    } catch (error) {
-      console.error('Erro ao excluir:', error);
-      alert('Erro ao excluir aplicação');
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    try {
-      const token = localStorage.getItem('token');
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003';
-      
-      const url = editingApp 
-        ? `${apiUrl}/applications/${editingApp.id}`
-        : `${apiUrl}/applications`;
-      
-      const method = editingApp ? 'PUT' : 'POST';
-      
-      const response = await fetch(url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Falha ao salvar aplicação');
-      }
-
-      const data = await response.json();
-      
-      if (editingApp) {
-        // Atualizar aplicação existente
-        setApplications(applications.map(app => 
-          app.id === editingApp.id 
-            ? { ...app, name: data.name, description: data.description }
-            : app
-        ));
-      } else {
-        // Adicionar nova aplicação
-        const newApp: Application = {
-          id: data._id,
-          name: data.name,
-          description: data.description || 'Sem descrição',
-          status: 'active',
-          createdAt: data.uploadedAt || data.createdAt || new Date().toISOString(),
-        };
-        setApplications([...applications, newApp]);
-      }
-      
-      setShowModal(false);
-      setFormData({ name: '', description: '' });
-    } catch (error) {
-      console.error('Erro ao salvar:', error);
-      alert('Erro ao salvar aplicação');
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="loading-container">
@@ -351,16 +250,10 @@ export default function Dashboard(): ReactElement {
       <main className="dashboard-main">
         <div className="main-header">
           <h2 className="page-title">Aplicações</h2>
-          {isAdmin && (
-            <button onClick={handleNewApp} className="new-app-button">
-              Nova Aplicação
-            </button>
-          )}
         </div>
         {applications.length === 0 ? (
           <div className="empty-state">
             <p className="empty-text">Nenhuma aplicação cadastrada.</p>
-            <p className="empty-text">Clique em "Nova Aplicação" para começar.</p>
           </div>
         ) : (
           <div className="app-grid">
@@ -399,69 +292,6 @@ export default function Dashboard(): ReactElement {
           </div>
         )}
       </main>
-
-      {/* Modal de Nova/Editar Aplicação */}
-      {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-header">
-              <h3 className="modal-title">
-                {editingApp ? 'Editar Aplicação' : 'Nova Aplicação'}
-              </h3>
-              <button 
-                onClick={() => setShowModal(false)}
-                className="modal-close"
-              >
-                ✕
-              </button>
-            </div>
-            
-            <form onSubmit={handleSubmit} className="modal-form">
-              <div className="form-group">
-                <label htmlFor="name" className="form-label">Nome</label>
-                <input
-                  type="text"
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="form-input"
-                  placeholder="Nome da aplicação"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="description" className="form-label">Descrição</label>
-                <textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="form-textarea"
-                  placeholder="Descrição da aplicação"
-                  rows={4}
-                  required
-                />
-              </div>
-
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="btn-cancel"
-                >
-                  Cancelar
-                </button>
-                <button
-                  type="submit"
-                  className="btn-submit"
-                >
-                  {editingApp ? 'Salvar' : 'Criar'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
