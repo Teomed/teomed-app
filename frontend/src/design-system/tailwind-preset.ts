@@ -8,7 +8,12 @@ import { typography } from './tokens/typography';
 import { spacing } from './tokens/spacing';
 import { radius } from './tokens/radius';
 import { shadows } from './tokens/shadows';
+import { motion } from './tokens/motion';
 import { layout } from './tokens/layout';
+
+const spacingScale = Object.fromEntries(
+  Object.entries(spacing).filter(([, value]) => typeof value === 'string')
+) as Record<string, string>;
 
 export const designSystemPreset = {
   theme: {
@@ -52,7 +57,7 @@ export const designSystemPreset = {
         relaxed: typography.lineHeight.relaxed,
       },
       spacing: {
-        ...spacing,
+        ...spacingScale,
       },
       borderRadius: {
         ...radius,
@@ -71,9 +76,15 @@ export const designSystemPreset = {
         ...layout.gap,
       },
       transitionDuration: {
-        fast: '200ms',
-        normal: '300ms',
-        slow: '400ms',
+        fast: motion.duration.fast,
+        normal: motion.duration.normal,
+        slow: motion.duration.slow,
+      },
+      transitionTimingFunction: {
+        ease: motion.easing.ease,
+        'ease-in': motion.easing.easeIn,
+        'ease-out': motion.easing.easeOut,
+        'ease-in-out': motion.easing.easeInOut,
       },
     },
   },
