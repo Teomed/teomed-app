@@ -263,7 +263,16 @@ export default function Login() {
             <input
               type="text"
               value={mfaCode}
-              onChange={(e) => setMfaCode(e.target.value.replace(/\D/g, '').slice(0, showBackupCode ? 8 : 6))}
+              onChange={(e) => {
+                const raw = e.target.value;
+                if (showBackupCode) {
+                  const cleaned = raw.replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 8);
+                  setMfaCode(cleaned);
+                } else {
+                  const cleaned = raw.replace(/\D/g, '').slice(0, 6);
+                  setMfaCode(cleaned);
+                }
+              }}
               placeholder={showBackupCode ? "00000000" : "000000"}
               className="mfa-input"
               maxLength={showBackupCode ? 8 : 6}

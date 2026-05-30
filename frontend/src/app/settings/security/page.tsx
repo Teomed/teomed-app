@@ -45,6 +45,12 @@ export default function SecuritySettings() {
         },
       });
 
+      if (response.status === 401) {
+        localStorage.removeItem('token');
+        router.push('/login');
+        return;
+      }
+
       if (response.ok) {
         const data = await response.json();
         setMfaEnabled(data.enabled);
@@ -64,6 +70,11 @@ export default function SecuritySettings() {
     try {
       const token = localStorage.getItem('token');
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003';
+
+      if (!token) {
+        router.push('/login');
+        return;
+      }
       
       const response = await fetch(`${apiUrl}/auth/setup-2fa`, {
         method: 'POST',
@@ -73,7 +84,26 @@ export default function SecuritySettings() {
       });
 
       if (!response.ok) {
-        throw new Error('Erro ao configurar MFA');
+        if (response.status === 401) {
+          localStorage.removeItem('token');
+          router.push('/login');
+          return;
+        }
+
+        let message = 'Erro ao configurar autenticação em dois fatores';
+        try {
+          const errorData = await response.json();
+          const raw = errorData?.message;
+          if (Array.isArray(raw)) {
+            message = raw.join(', ');
+          } else if (typeof raw === 'string' && raw.trim().length > 0) {
+            message = raw;
+          }
+        } catch {
+          // ignore
+        }
+
+        throw new Error(message);
       }
 
       const data = await response.json();
@@ -81,7 +111,8 @@ export default function SecuritySettings() {
       setSecret(data.secret);
       setShowSetupModal(true);
     } catch (error) {
-      setError('Erro ao configurar autenticação em dois fatores');
+      const message = error instanceof Error ? error.message : 'Erro ao configurar autenticação em dois fatores';
+      setError(message);
     } finally {
       setIsLoading(false);
     }
