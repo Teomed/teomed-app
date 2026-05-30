@@ -6,36 +6,48 @@
 export const typography = {
   // Font Families
   fontFamily: {
-    base: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+    base: 'Inter, Helvetica, Arial, sans-serif',
     mono: 'monospace',
   },
 
   // Font Sizes (in px, converted to rem for Tailwind)
   fontSize: {
-    h1: '54px', // 3.375rem - hero__title
-    h2: '40px', // 2.5rem - module-columns-title
-    h3: '26px', // 1.625rem - fdn-copy-block__title
-    h4: '32px', // 2rem - fdn-basic-cta__header
-    bodyLarge: '18px', // 1.125rem - hero__description
-    bodyRegular: '16px', // 1rem - default body
-    bodySmall: '14px', // 0.875rem - zdcm-top-label--text
-    small: '12px', // 0.75rem - footer text
-    tiny: '0.75rem', // spec labels
+    '2xs': '0.625rem',
+    xs: '0.75rem',
+    sm: '0.875rem',
+    base: '1rem',
+    lg: '1.125rem',
+    xl: '1.25rem',
+    '2xl': '1.5rem',
+    '3xl': '1.875rem',
+    '4xl': '2.25rem',
+    '5xl': '3rem',
+    '6xl': '3.75rem',
+    '7xl': '4.5rem',
+    h1: '3.75rem',
+    h2: '2.25rem',
+    h3: '1.5rem',
+    h4: '1.25rem',
+    bodyLarge: '1.125rem',
+    bodyRegular: '1rem',
+    bodySmall: '0.875rem',
+    small: '0.75rem',
+    tiny: '0.625rem',
   },
 
   // Line Heights
   lineHeight: {
-    tight: '1.2', // headings
-    snug: '1.3', // h3, h4
-    normal: '1.5', // tabs, buttons
-    relaxed: '1.6', // body text
+    tight: '1.2',
+    snug: '1.2',
+    normal: '1.5',
+    relaxed: '1.5',
   },
 
   // Font Weights
   fontWeight: {
     regular: '400',
     medium: '500',
-    semibold: '600',
+    semibold: '700',
     bold: '700',
   },
 } as const;

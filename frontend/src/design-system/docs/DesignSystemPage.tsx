@@ -29,10 +29,10 @@ export const DesignSystemPage: React.FC = () => {
 
   const neutralColors = [
     { name: 'White', value: '#ffffff', color: colors.neutral.white },
-    { name: 'Off White', value: '#f7f7f8', color: colors.neutral.offWhite },
-    { name: 'Light Gray', value: '#e9e9e9', color: colors.neutral.lightGray },
-    { name: 'Medium Gray', value: '#696969', color: colors.neutral.mediumGray },
-    { name: 'Dark Gray', value: '#2f2f30', color: colors.neutral.darkGray },
+    { name: 'Off White', value: '#f5f7ff', color: colors.neutral.offWhite },
+    { name: 'Light Gray', value: '#f0f2f8', color: colors.neutral.lightGray },
+    { name: 'Medium Gray', value: '#6e91ca', color: colors.neutral.mediumGray },
+    { name: 'Dark Gray', value: '#0f1f43', color: colors.neutral.darkGray },
   ];
 
   // Accordion data
