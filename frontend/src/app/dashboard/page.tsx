@@ -202,14 +202,12 @@ export default function Dashboard(): ReactElement {
   return (
     <div className="min-h-screen bg-surface-light text-text-primary">
       <header className="border-b border-white/15 bg-brand-800 shadow-nav">
-        <Container className="relative flex h-20 items-center">
-          <div className="absolute inset-0 flex items-center justify-center px-6">
-            <h1 className="text-lg font-semibold tracking-tight text-text-white sm:text-xl">
-              Teome serviços médicos SS
-            </h1>
-          </div>
+        <Container className="flex h-20 items-center justify-between">
+          <h1 className="text-2xl font-bold tracking-tight text-text-white sm:text-3xl">
+            TEOMED SERVIÇOS MÉDICOS SS
+          </h1>
 
-          <div className="ml-auto flex items-center gap-3">
+          <div className="flex items-center gap-3">
             <Button
               onClick={() => router.push('/settings/security')}
               variant="secondary"
