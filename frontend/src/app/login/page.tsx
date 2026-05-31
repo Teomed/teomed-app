@@ -282,6 +282,17 @@ export default function Login() {
                       setMfaCode(cleaned);
                     }
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key !== 'Enter') return;
+
+                    e.preventDefault();
+
+                    if (isLoading) return;
+                    const requiredLength = showBackupCode ? 8 : 6;
+                    if (mfaCode.length !== requiredLength) return;
+
+                    handleVerifyMfa();
+                  }}
                   placeholder={showBackupCode ? '00000000' : '000000'}
                   className="w-full rounded-md border border-neutral-border bg-surface-white px-4 py-3 text-center font-mono text-2xl tracking-[0.5rem] text-text-primary placeholder:text-text-muted focus-ring"
                   maxLength={showBackupCode ? 8 : 6}
