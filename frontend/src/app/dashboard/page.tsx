@@ -16,7 +16,12 @@ export default function Dashboard(): ReactElement {
   const getAppOverride = (name: string) => {
     const n = (name || '').trim().toLowerCase();
 
-    if (n === 'teomed viewer') {
+    if (
+      n === 'teomed viewer' ||
+      n === 'teomed' ||
+      n === 'teomed-filemaker' ||
+      n === 'teomed filemaker'
+    ) {
       return {
         name: 'Teomed-Filemaker',
         description:
@@ -29,6 +34,13 @@ export default function Dashboard(): ReactElement {
         name: 'Consultas Novas',
         description:
           'Controle de pacientes que passam pela consulta e seu seguimento, inclusive no pós-operatório e após a cirurgia.',
+      };
+    }
+
+    if (n === 'financeiro') {
+      return {
+        name: 'Dashboard',
+        description: 'Análise estatistica de todos os módulos',
       };
     }
 
@@ -209,18 +221,11 @@ export default function Dashboard(): ReactElement {
 
           <div className="flex items-center gap-3">
             <Button
-              onClick={() => router.push('/settings/security')}
+              onClick={handleLogout}
               variant="secondary"
               size="small"
-              className="p-2"
-              title="Configurações de Segurança"
+              className="gap-2 fdn-button--secondary-inverse"
             >
-              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </Button>
-            <Button onClick={handleLogout} variant="secondary" size="small" className="gap-2">
               <span>Sair</span>
               <span aria-hidden="true">→</span>
             </Button>
@@ -264,7 +269,7 @@ export default function Dashboard(): ReactElement {
       )}
 
       <main>
-        <Section title="Aplicações" className="bg-surface-light">
+        <Section title="Aplicações" className="bg-surface-light ds-section--compact">
           <Container>
             {applications.length === 0 ? (
               <Card hover={false} padding="md" className="animate-fade-in">
@@ -273,7 +278,7 @@ export default function Dashboard(): ReactElement {
             ) : (
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {applications.map((app) => (
-                  <div key={app.id}>
+                  <div key={app.id} className="h-full">
                     {(() => {
                       const Wrapper: any = app.url ? 'a' : 'div';
                       const wrapperProps = app.url
@@ -284,26 +289,21 @@ export default function Dashboard(): ReactElement {
                           }
                         : {};
                       return (
-                        <Wrapper className="group block rounded-2xl focus-ring" {...wrapperProps}>
-                          <Card className="h-full">
+                        <Wrapper className="group block h-full rounded-2xl focus-ring" {...wrapperProps}>
+                          <Card className="h-full min-h-[180px] sm:min-h-[200px] lg:min-h-[220px]">
                             <div className="flex h-full flex-col gap-3">
                               <div>
                                 <h3 className="text-base font-semibold text-text-primary">{app.name}</h3>
                                 <p className="mt-2 text-sm text-text-secondary">{app.description}</p>
                               </div>
 
-                              <div className="mt-auto flex items-center justify-between gap-4">
-                                <span className="text-xs text-text-muted">
-                                  {new Date(app.createdAt).toLocaleDateString('pt-BR')}
-                                </span>
+                              <div className="mt-auto flex items-center justify-end">
                                 <span
-                                  className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${
-                                    app.status === 'active'
-                                      ? 'bg-semantic-success text-surface-white'
-                                      : 'bg-semantic-warning text-surface-white'
+                                  className={`fdn-button fdn-button--button-style-secondary fdn-button--size-sm fdn-button--secondary-soft ${
+                                    app.url ? '' : 'pointer-events-none'
                                   }`}
                                 >
-                                  {app.status === 'active' ? 'Ativo' : 'Inativo'}
+                                  <span>Entrar</span>
                                 </span>
                               </div>
                             </div>

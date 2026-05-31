@@ -175,6 +175,21 @@
   color: #fff;
 }
 
+ .fdn-button--secondary-inverse {
+  background-color: #ffffff;
+ }
+
+ .fdn-button--secondary-soft {
+  background-color: #e6f0ff;
+  border-color: #7db2f5;
+  color: #0045cc;
+  box-shadow: 0 2px 8px rgba(11,92,255,0.18);
+ }
+
+ .fdn-button--secondary-soft:hover {
+  border-color: #0b5cff;
+ }
+
 .fdn-button--button-style-textLink,
 .fdn-button--button-style-text-link {
   background-color: transparent;
@@ -489,6 +504,17 @@
   max-width: 1200px;
   margin: 0 auto;
 }
+
+ .ds-section--compact {
+  padding: 2rem 2rem;
+ }
+
+ @media (min-width: 1024px) {
+  .ds-section--compact {
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+  }
+ }
 
 .ds-section--dark {
   background: #00053d;
