@@ -235,223 +235,284 @@ export default function SecuritySettings() {
 
   if (isLoading && !showSetupModal) {
     return (
-      <div className="security-page">
-        <div className="loading">Carregando...</div>
+      <div className="min-h-screen bg-surface-light flex items-center justify-center p-6">
+        <div className="text-sm text-text-muted">Carregando...</div>
       </div>
     );
   }
 
   return (
-    <div className="security-page">
-      <Container className="security-container">
-        <div className="security-header">
-          {!isRequired && (
-            <Button onClick={() => router.push('/dashboard')} variant="textLink" size="small" className="back-button">
-              ← Voltar
-            </Button>
-          )}
-          <h1>Configurações de Segurança</h1>
-          {isRequired && !mfaEnabled && (
-            <div className="required-notice">
-              ⚠️ Configuração obrigatória
-            </div>
-          )}
-        </div>
-
-        <Card className="security-card" hover={false}>
-          <div className="card-header">
-            <div>
-              <h2>Autenticação em Dois Fatores (2FA)</h2>
-              <p className="card-description">
-                Adicione uma camada extra de segurança à sua conta
-              </p>
-            </div>
-            <div className={`status-badge ${mfaEnabled ? 'enabled' : 'disabled'}`}>
-              {mfaEnabled ? 'Ativado' : 'Desativado'}
-            </div>
-          </div>
-
-          <div className="card-content">
-            <p className="info-text">
-              {mfaEnabled
-                ? 'Sua conta está protegida com autenticação em dois fatores. Você precisará de um código do seu aplicativo autenticador para fazer login.'
-                : 'Proteja sua conta com autenticação em dois fatores usando Google Authenticator, Microsoft Authenticator ou Authy.'}
-            </p>
-
-            {mfaEnabled && backupCodesCount > 0 && (
-              <div className="backup-codes-info">
-                <p>Códigos de backup restantes: {backupCodesCount}</p>
+    <div className="min-h-screen bg-surface-light py-10">
+      <Container className="w-full">
+        <div className="mx-auto w-full max-w-[800px]">
+          <div className="mb-8 flex flex-col gap-4">
+            {!isRequired && (
+              <div>
+                <Button
+                  onClick={() => router.push('/dashboard')}
+                  variant="textLink"
+                  size="small"
+                >
+                  ← Voltar
+                </Button>
               </div>
             )}
 
-            {error && <div className="error-message">{error}</div>}
-            {success && <div className="success-message">{success}</div>}
-
-            <div className="card-actions">
-              {!mfaEnabled ? (
-                <Button
-                  onClick={handleSetupMfa}
-                  disabled={isLoading}
-                  variant="primary"
-                  size="small"
-                >
-                  Ativar Autenticação em Dois Fatores
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => setShowDisableModal(true)}
-                  variant="danger"
-                  size="small"
-                >
-                  Desativar Autenticação em Dois Fatores
-                </Button>
+            <div className="flex flex-col gap-3">
+              <h1 className="text-3xl font-semibold text-text-primary">Configurações de Segurança</h1>
+              {isRequired && !mfaEnabled && (
+                <div className="rounded-lg border border-semantic-warning bg-surface-white px-4 py-3 text-sm text-text-primary">
+                  ⚠️ Configuração obrigatória
+                </div>
               )}
             </div>
           </div>
-        </Card>
+
+          <Card hover={false} padding="md" className="animate-fade-in">
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div>
+                  <h2 className="text-lg font-semibold text-text-primary">Autenticação em Dois Fatores (2FA)</h2>
+                  <p className="mt-2 text-sm text-text-muted">
+                    Adicione uma camada extra de segurança à sua conta
+                  </p>
+                </div>
+
+                <div
+                  className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${
+                    mfaEnabled
+                      ? 'bg-semantic-success text-surface-white'
+                      : 'bg-semantic-error text-surface-white'
+                  }`}
+                >
+                  {mfaEnabled ? 'Ativado' : 'Desativado'}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-4">
+                <p className="text-sm leading-relaxed text-text-secondary">
+                  {mfaEnabled
+                    ? 'Sua conta está protegida com autenticação em dois fatores. Você precisará de um código do seu aplicativo autenticador para fazer login.'
+                    : 'Proteja sua conta com autenticação em dois fatores usando Google Authenticator, Microsoft Authenticator ou Authy.'}
+                </p>
+
+                {mfaEnabled && backupCodesCount > 0 && (
+                  <div className="rounded-lg border border-neutral-border bg-surface-white px-4 py-3 text-sm text-text-secondary">
+                    Códigos de backup restantes: <span className="font-semibold text-text-primary">{backupCodesCount}</span>
+                  </div>
+                )}
+
+                {error && (
+                  <div className="rounded-lg border border-semantic-error bg-surface-white px-4 py-3 text-sm text-semantic-error">
+                    {error}
+                  </div>
+                )}
+                {success && (
+                  <div className="rounded-lg border border-semantic-success bg-surface-white px-4 py-3 text-sm text-semantic-success">
+                    {success}
+                  </div>
+                )}
+
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  {!mfaEnabled ? (
+                    <Button onClick={handleSetupMfa} disabled={isLoading} variant="primary" size="sm">
+                      Ativar Autenticação em Dois Fatores
+                    </Button>
+                  ) : (
+                    <Button onClick={() => setShowDisableModal(true)} variant="danger" size="sm">
+                      Desativar Autenticação em Dois Fatores
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Card>
+        </div>
       </Container>
 
       {/* Modal de Configuração MFA */}
       {showSetupModal && (
-        <div className="modal-overlay">
-          <div className="modal-content-large">
-            <div className="modal-header">
-              <h3>Configurar Autenticação em Dois Fatores</h3>
-              <button onClick={closeSetupModal} className="modal-close">✕</button>
-            </div>
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-[600px]">
+            <Card hover={false} padding="md" className="max-h-[90vh] overflow-hidden">
+              <div className="flex items-center justify-between gap-4">
+                <h3 className="text-lg font-semibold text-text-primary">Configurar Autenticação em Dois Fatores</h3>
+                <button
+                  type="button"
+                  onClick={closeSetupModal}
+                  className="rounded-full p-2 text-text-muted hover:text-text-primary focus-ring"
+                  aria-label="Fechar"
+                >
+                  ✕
+                </button>
+              </div>
 
-            <div className="modal-body">
-              {!backupCodes.length ? (
-                <>
-                  <div className="setup-step">
-                    <h4>1. Escaneie o QR Code</h4>
-                    <p>Use Google Authenticator, Microsoft Authenticator ou Authy</p>
-                    {qrCode && (
-                      <div className="qr-code-container">
-                        <img src={qrCode} alt="QR Code" />
+              <div className="mt-6 max-h-[70vh] overflow-y-auto pr-1">
+                {!backupCodes.length ? (
+                  <div className="flex flex-col gap-8">
+                    <div>
+                      <h4 className="text-sm font-semibold text-text-primary">1. Escaneie o QR Code</h4>
+                      <p className="mt-2 text-sm text-text-muted">Use Google Authenticator, Microsoft Authenticator ou Authy</p>
+                      {qrCode && (
+                        <div className="mt-4 flex justify-center rounded-lg border border-neutral-border bg-surface-light p-6">
+                          <img src={qrCode} alt="QR Code" className="h-auto w-full max-w-[256px]" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div>
+                      <h4 className="text-sm font-semibold text-text-primary">2. Ou digite o código manualmente</h4>
+                      <div className="mt-3 flex flex-col gap-3 rounded-lg border border-neutral-border bg-surface-light p-4 sm:flex-row sm:items-center sm:justify-between">
+                        <code className="break-all font-mono text-sm text-text-primary">{secret}</code>
+                        <Button
+                          onClick={() => {
+                            navigator.clipboard.writeText(secret);
+                            setSuccess('Código copiado!');
+                          }}
+                          variant="secondary"
+                          size="sm"
+                        >
+                          Copiar
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className="text-sm font-semibold text-text-primary">3. Digite o código de 6 dígitos</h4>
+                      <div className="mt-3">
+                        <input
+                          type="text"
+                          value={verificationCode}
+                          onChange={(e) => {
+                            const cleaned = e.target.value.replace(/\s/g, '').replace(/\D/g, '').slice(0, 6);
+                            setVerificationCode(cleaned);
+                            setError('');
+                          }}
+                          placeholder="000000"
+                          className={`w-full rounded-md border bg-surface-white px-4 py-3 text-center font-mono text-2xl tracking-[0.5rem] text-text-primary placeholder:text-text-muted focus-ring ${
+                            verificationCode.length === 6 ? 'border-semantic-success' : 'border-neutral-border'
+                          }`}
+                          maxLength={6}
+                          autoComplete="off"
+                        />
+                        {verificationCode.length > 0 && verificationCode.length < 6 && (
+                          <p className="mt-2 text-center text-xs text-text-muted">
+                            {6 - verificationCode.length} dígitos restantes
+                          </p>
+                        )}
+                      </div>
+                    </div>
+
+                    {error && (
+                      <div className="rounded-lg border border-semantic-error bg-surface-white px-4 py-3 text-sm text-semantic-error">
+                        {error}
                       </div>
                     )}
-                  </div>
 
-                  <div className="setup-step">
-                    <h4>2. Ou digite o código manualmente</h4>
-                    <div className="secret-code">
-                      <code>{secret}</code>
-                      <Button
-                        onClick={() => {
-                          navigator.clipboard.writeText(secret);
-                          setSuccess('Código copiado!');
-                        }}
-                        variant="secondary"
-                        size="small"
-                        className="btn-copy"
-                      >
-                        Copiar
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="setup-step">
-                    <h4>3. Digite o código de 6 dígitos</h4>
-                    <input
-                      type="text"
-                      value={verificationCode}
-                      onChange={(e) => {
-                        const cleaned = e.target.value.replace(/\s/g, '').replace(/\D/g, '').slice(0, 6);
-                        setVerificationCode(cleaned);
-                        setError(''); // Limpar erro ao digitar
-                      }}
-                      placeholder="000000"
-                      className={`code-input ${verificationCode.length === 6 ? 'code-complete' : ''}`}
-                      maxLength={6}
-                      autoComplete="off"
-                    />
-                    {verificationCode.length > 0 && verificationCode.length < 6 && (
-                      <p className="code-hint">{6 - verificationCode.length} dígitos restantes</p>
-                    )}
-                  </div>
-
-                  {error && <div className="error-message">{error}</div>}
-
-                  <Button
-                    onClick={handleConfirmMfa}
-                    disabled={isLoading || verificationCode.length !== 6}
-                    variant="primary"
-                    size="small"
-                    className="full-width"
-                  >
-                    {isLoading ? 'Verificando...' : 'Ativar'}
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <div className="success-message">
-                    ✓ Autenticação em dois fatores ativada com sucesso!
-                  </div>
-
-                  <div className="backup-codes-section">
-                    <h4>Códigos de Backup</h4>
-                    <p className="warning-text">
-                      ⚠️ Salve estes códigos em um local seguro. Você pode usá-los para acessar sua conta se perder acesso ao seu autenticador.
-                    </p>
-                    <div className="backup-codes-list">
-                      {backupCodes.map((code, index) => (
-                        <div key={index} className="backup-code">{code}</div>
-                      ))}
-                    </div>
-                    <Button onClick={copyBackupCodes} variant="secondary" size="small" className="full-width">
-                      Copiar Códigos
+                    <Button
+                      onClick={handleConfirmMfa}
+                      disabled={isLoading || verificationCode.length !== 6}
+                      variant="primary"
+                      size="sm"
+                      className="w-full justify-center"
+                    >
+                      {isLoading ? 'Verificando...' : 'Ativar'}
                     </Button>
                   </div>
+                ) : (
+                  <div className="flex flex-col gap-6">
+                    <div className="rounded-lg border border-semantic-success bg-surface-white px-4 py-3 text-sm text-semantic-success">
+                      ✓ Autenticação em dois fatores ativada com sucesso!
+                    </div>
 
-                  <Button onClick={closeSetupModal} variant="primary" size="small" className="full-width">
-                    Concluir
-                  </Button>
-                </>
-              )}
-            </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-text-primary">Códigos de Backup</h4>
+                      <p className="mt-2 rounded-lg border border-semantic-warning bg-surface-light px-4 py-3 text-sm text-text-primary">
+                        ⚠️ Salve estes códigos em um local seguro. Você pode usá-los para acessar sua conta se perder acesso ao seu autenticador.
+                      </p>
+
+                      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        {backupCodes.map((code, index) => (
+                          <div
+                            key={index}
+                            className="rounded-lg border border-neutral-border bg-surface-white px-4 py-3 text-center font-mono text-sm text-text-primary"
+                          >
+                            {code}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="mt-4">
+                        <Button onClick={copyBackupCodes} variant="secondary" size="sm" className="w-full justify-center">
+                          Copiar Códigos
+                        </Button>
+                      </div>
+                    </div>
+
+                    <Button onClick={closeSetupModal} variant="primary" size="sm" className="w-full justify-center">
+                      Concluir
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </Card>
           </div>
         </div>
       )}
 
       {/* Modal de Desativar MFA */}
       {showDisableModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h3>Desativar Autenticação em Dois Fatores</h3>
-              <button onClick={() => setShowDisableModal(false)} className="modal-close">✕</button>
-            </div>
-
-            <div className="modal-body">
-              <p className="warning-text">
-                ⚠️ Sua conta ficará menos segura. Digite sua senha para confirmar.
-              </p>
-
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Digite sua senha"
-                className="form-input"
-              />
-
-              {error && <div className="error-message">{error}</div>}
-
-              <div className="modal-actions">
-                <Button onClick={() => setShowDisableModal(false)} variant="secondary" size="small">
-                  Cancelar
-                </Button>
-                <Button
-                  onClick={handleDisableMfa}
-                  disabled={isLoading || !password}
-                  variant="danger"
-                  size="small"
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-[500px]">
+            <Card hover={false} padding="md">
+              <div className="flex items-center justify-between gap-4">
+                <h3 className="text-lg font-semibold text-text-primary">Desativar Autenticação em Dois Fatores</h3>
+                <button
+                  type="button"
+                  onClick={() => setShowDisableModal(false)}
+                  className="rounded-full p-2 text-text-muted hover:text-text-primary focus-ring"
+                  aria-label="Fechar"
                 >
-                  {isLoading ? 'Desativando...' : 'Desativar'}
-                </Button>
+                  ✕
+                </button>
               </div>
-            </div>
+
+              <div className="mt-6">
+                <p className="rounded-lg border border-semantic-warning bg-surface-light px-4 py-3 text-sm text-text-primary">
+                  ⚠️ Sua conta ficará menos segura. Digite sua senha para confirmar.
+                </p>
+
+                <div className="mt-4">
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Digite sua senha"
+                    className="w-full rounded-md border border-neutral-border bg-surface-white px-4 py-3 text-sm text-text-primary placeholder:text-text-muted focus-ring"
+                  />
+                </div>
+
+                {error && (
+                  <div className="mt-4 rounded-lg border border-semantic-error bg-surface-white px-4 py-3 text-sm text-semantic-error">
+                    {error}
+                  </div>
+                )}
+
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-end">
+                  <Button onClick={() => setShowDisableModal(false)} variant="secondary" size="sm">
+                    Cancelar
+                  </Button>
+                  <Button
+                    onClick={handleDisableMfa}
+                    disabled={isLoading || !password}
+                    variant="danger"
+                    size="sm"
+                  >
+                    {isLoading ? 'Desativando...' : 'Desativar'}
+                  </Button>
+                </div>
+              </div>
+            </Card>
           </div>
         </div>
       )}
