@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { ReactElement, JSX } from 'react';
 import { Application } from './types';
@@ -11,6 +11,7 @@ export default function Dashboard(): ReactElement {
   const [isLoading, setIsLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string>('');
   const [showMfaBanner, setShowMfaBanner] = useState(false);
+  const gridRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
 
   const getAppOverride = (name: string) => {
@@ -119,6 +120,49 @@ export default function Dashboard(): ReactElement {
     checkMfaStatus(token);
   }, [router]);
 
+  useLayoutEffect(() => {
+    const grid = gridRef.current;
+    if (!grid) return;
+
+    let raf = 0;
+
+    const getCards = () => Array.from(grid.querySelectorAll<HTMLElement>('[data-app-card]'));
+
+    const measure = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const cards = getCards();
+        if (cards.length === 0) return;
+
+        cards.forEach((card) => {
+          card.style.height = '';
+        });
+
+        const maxHeight = Math.max(...cards.map((card) => card.getBoundingClientRect().height));
+        cards.forEach((card) => {
+          card.style.height = `${maxHeight}px`;
+        });
+      });
+    };
+
+    measure();
+
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : null;
+    ro?.observe(grid);
+    getCards().forEach((card) => ro?.observe(card));
+
+    window.addEventListener('resize', measure);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', measure);
+      ro?.disconnect();
+      getCards().forEach((card) => {
+        card.style.height = '';
+      });
+    };
+  }, [applications.length]);
+
   const checkMfaStatus = async (token: string) => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3003';
@@ -214,21 +258,23 @@ export default function Dashboard(): ReactElement {
   return (
     <div className="min-h-screen bg-surface-light text-text-primary">
       <header className="border-b border-white/15 bg-brand-800 shadow-nav">
-        <Container className="flex h-20 items-center justify-between">
-          <h1 className="text-2xl font-bold tracking-tight text-text-white sm:text-3xl">
-            TEOMED SERVIÇOS MÉDICOS SS
-          </h1>
+        <Container className="h-16 sm:h-20">
+          <div className="-mx-8 flex h-full items-center justify-between px-4 sm:mx-0 sm:px-0">
+            <h1 className="min-w-0 flex-1 pr-2 text-xs font-bold leading-tight tracking-tight text-text-white sm:pr-3 sm:text-2xl sm:whitespace-nowrap lg:text-3xl">
+              TEOMED SERVIÇOS MÉDICOS SS
+            </h1>
 
-          <div className="flex items-center gap-3">
-            <Button
-              onClick={handleLogout}
-              variant="secondary"
-              size="small"
-              className="gap-2 fdn-button--secondary-inverse"
-            >
-              <span>Sair</span>
-              <span aria-hidden="true">→</span>
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={handleLogout}
+                variant="secondary"
+                size="small"
+                className="gap-2 fdn-button--secondary-inverse"
+              >
+                <span>Sair</span>
+                <span aria-hidden="true">→</span>
+              </Button>
+            </div>
           </div>
         </Container>
       </header>
@@ -276,7 +322,7 @@ export default function Dashboard(): ReactElement {
                 <p className="text-sm text-text-muted">Nenhuma aplicação cadastrada.</p>
               </Card>
             ) : (
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div ref={gridRef} className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {applications.map((app) => (
                   <div key={app.id} className="h-full">
                     {(() => {
@@ -289,8 +335,8 @@ export default function Dashboard(): ReactElement {
                           }
                         : {};
                       return (
-                        <Wrapper className="group block h-full rounded-2xl focus-ring" {...wrapperProps}>
-                          <Card className="h-full min-h-[180px] sm:min-h-[200px] lg:min-h-[220px]">
+                        <Wrapper data-app-card className="group block h-full rounded-2xl focus-ring" {...wrapperProps}>
+                          <Card className="h-full">
                             <div className="flex h-full flex-col gap-3">
                               <div>
                                 <h3 className="text-base font-semibold text-text-primary">{app.name}</h3>
