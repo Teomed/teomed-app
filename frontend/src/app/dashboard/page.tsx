@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { ReactElement, JSX } from 'react';
 import { Application } from './types';
-import { Button, Card, Container } from '@/design-system';
+import { Button, Card, Container, Section } from '@/design-system';
 
 export default function Dashboard(): ReactElement {
   const [applications, setApplications] = useState<Application[]>([]);
@@ -190,8 +190,8 @@ export default function Dashboard(): ReactElement {
 
   if (isLoading) {
     return (
-      <div className="loading-container">
-        <svg className="loading-spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <div className="min-h-screen bg-surface-light text-text-primary flex items-center justify-center p-6">
+        <svg className="h-6 w-6 animate-spin text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
         </svg>
@@ -200,16 +200,16 @@ export default function Dashboard(): ReactElement {
   }
 
   return (
-    <div className="dashboard-page">
-      <header className="dashboard-header">
-        <Container className="header-container">
-          <h1 className="app-title">Teomed</h1>
-          <div className="header-actions">
+    <div className="min-h-screen bg-surface-light text-text-primary">
+      <header className="border-b border-white/15 bg-brand-800 shadow-nav">
+        <Container className="flex h-20 items-center justify-between">
+          <h1 className="text-2xl font-semibold tracking-tight text-text-white sm:text-3xl">Teomed</h1>
+          <div className="flex items-center gap-3">
             <Button
               onClick={() => router.push('/settings/security')}
               variant="secondary"
               size="small"
-              className="settings-button"
+              className="p-2"
               title="Configurações de Segurança"
             >
               <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
@@ -217,91 +217,102 @@ export default function Dashboard(): ReactElement {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </Button>
-            <Button
-              onClick={handleLogout}
-              variant="textLink"
-              size="small"
-              className="logout-button"
-            >
+            <Button onClick={handleLogout} variant="textLink" size="small" className="text-text-white opacity-80 hover:opacity-100">
               Sair
             </Button>
           </div>
         </Container>
       </header>
-      
+
       {showMfaBanner && (
-        <div className="mfa-banner">
-          <div className="mfa-banner-content">
-            <div className="mfa-banner-icon">⚠️</div>
-            <div className="mfa-banner-text">
-              <strong>Ação Necessária:</strong> Configure a autenticação em dois fatores para maior segurança da sua conta.
-            </div>
-            <Button
-              onClick={() => router.push('/settings/security?setup=required')}
-              variant="primary"
-              size="small"
-              className="mfa-banner-button"
-            >
-              Configurar Agora
-            </Button>
-            <button 
-              onClick={() => setShowMfaBanner(false)}
-              className="mfa-banner-close"
-            >
-              ✕
-            </button>
-          </div>
+        <div className="border-b border-neutral-border bg-surface-light">
+          <Container className="py-4">
+            <Card hover={false} padding="sm" className="animate-fade-in border border-semantic-warning bg-surface-white">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-start gap-3">
+                  <div className="text-lg leading-none">⚠️</div>
+                  <div className="text-sm text-text-secondary">
+                    <strong className="font-semibold text-text-primary">Ação Necessária:</strong> Configure a autenticação em dois fatores para maior segurança da sua conta.
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <Button
+                    onClick={() => router.push('/settings/security?setup=required')}
+                    variant="primary"
+                    size="small"
+                  >
+                    Configurar Agora
+                  </Button>
+                  <button
+                    onClick={() => setShowMfaBanner(false)}
+                    className="rounded-full p-2 text-text-muted hover:text-text-primary focus-ring"
+                    aria-label="Fechar banner"
+                    type="button"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            </Card>
+          </Container>
         </div>
       )}
-      
-      <main className="dashboard-main">
-        <Container>
-          <div className="main-header">
-            <h2 className="page-title">Aplicações</h2>
-          </div>
-          {applications.length === 0 ? (
-            <div className="empty-state">
-              <p className="empty-text">Nenhuma aplicação cadastrada.</p>
-            </div>
-          ) : (
-            <div className="app-grid">
-              {applications.map((app) => (
-                <div key={app.id}>
-                  {(() => {
-                    const Wrapper: any = app.url ? 'a' : 'div';
-                    const wrapperProps = app.url
-                      ? {
-                          href: app.url,
-                          target: '_blank',
-                          rel: 'noopener noreferrer',
-                        }
-                      : {};
-                    return (
-                      <Wrapper className="app-card" {...wrapperProps}>
-                        <Card className="app-card-inner">
-                          <h3 className="app-name">{app.name}</h3>
-                          <p className="app-description">{app.description}</p>
-                          <div className="card-footer">
-                            <span className="app-date">
-                              {new Date(app.createdAt).toLocaleDateString('pt-BR')}
-                            </span>
-                            <div>
-                              <span
-                                className={`status-badge ${app.status === 'active' ? 'status-active' : 'status-inactive'}`}
-                              >
-                                {app.status === 'active' ? 'Ativo' : 'Inativo'}
-                              </span>
+
+      <main>
+        <Section title="Aplicações" className="bg-surface-light">
+          <Container>
+            {applications.length === 0 ? (
+              <Card hover={false} padding="md" className="animate-fade-in">
+                <p className="text-sm text-text-muted">Nenhuma aplicação cadastrada.</p>
+              </Card>
+            ) : (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {applications.map((app) => (
+                  <div key={app.id}>
+                    {(() => {
+                      const Wrapper: any = app.url ? 'a' : 'div';
+                      const wrapperProps = app.url
+                        ? {
+                            href: app.url,
+                            target: '_blank',
+                            rel: 'noopener noreferrer',
+                          }
+                        : {};
+                      return (
+                        <Wrapper className="group block rounded-2xl focus-ring" {...wrapperProps}>
+                          <Card className="h-full">
+                            <div className="flex h-full flex-col gap-3">
+                              <div>
+                                <h3 className="text-base font-semibold text-text-primary">{app.name}</h3>
+                                <p className="mt-2 text-sm text-text-secondary">{app.description}</p>
+                              </div>
+
+                              <div className="mt-auto flex items-center justify-between gap-4">
+                                <span className="text-xs text-text-muted">
+                                  {new Date(app.createdAt).toLocaleDateString('pt-BR')}
+                                </span>
+                                <span
+                                  className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${
+                                    app.status === 'active'
+                                      ? 'bg-semantic-success text-surface-white'
+                                      : 'bg-semantic-warning text-surface-white'
+                                  }`}
+                                >
+                                  {app.status === 'active' ? 'Ativo' : 'Inativo'}
+                                </span>
+                              </div>
                             </div>
-                          </div>
-                        </Card>
-                      </Wrapper>
-                    );
-                  })()}
-                </div>
-              ))}
-            </div>
-          )}
-        </Container>
+                          </Card>
+                        </Wrapper>
+                      );
+                    })()}
+                  </div>
+                ))}
+              </div>
+            )}
+          </Container>
+        </Section>
       </main>
     </div>
   );
