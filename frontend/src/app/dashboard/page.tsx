@@ -202,9 +202,14 @@ export default function Dashboard(): ReactElement {
   return (
     <div className="min-h-screen bg-surface-light text-text-primary">
       <header className="border-b border-white/15 bg-brand-800 shadow-nav">
-        <Container className="flex h-20 items-center justify-between">
-          <h1 className="text-2xl font-semibold tracking-tight text-text-white sm:text-3xl">Teomed</h1>
-          <div className="flex items-center gap-3">
+        <Container className="relative flex h-20 items-center">
+          <div className="absolute inset-0 flex items-center justify-center px-6">
+            <h1 className="text-lg font-semibold tracking-tight text-text-white sm:text-xl">
+              Teome serviços médicos SS
+            </h1>
+          </div>
+
+          <div className="ml-auto flex items-center gap-3">
             <Button
               onClick={() => router.push('/settings/security')}
               variant="secondary"
@@ -217,8 +222,9 @@ export default function Dashboard(): ReactElement {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </Button>
-            <Button onClick={handleLogout} variant="textLink" size="small" className="text-text-white opacity-80 hover:opacity-100">
-              Sair
+            <Button onClick={handleLogout} variant="secondary" size="small" className="gap-2">
+              <span>Sair</span>
+              <span aria-hidden="true">→</span>
             </Button>
           </div>
         </Container>
