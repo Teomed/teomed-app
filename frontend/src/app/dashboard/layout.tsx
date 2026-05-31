@@ -1,5 +1,3 @@
-import '../styles/dashboard.css';
-
 export default function DashboardLayout({
   children,
 }: {

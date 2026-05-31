@@ -1,5 +1,3 @@
-import '../styles/login.css';
-
 export default function LoginLayout({
   children,
 }: {
