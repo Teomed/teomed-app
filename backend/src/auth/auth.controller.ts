@@ -45,6 +45,13 @@ export class AuthController {
     return this.authService.confirmTwoFactor(req.user.userId, body.token);
   }
 
+  @Post('configure-2fa')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async configureTwoFactor(@Request() req, @Body() body: ConfirmTwoFactorDto) {
+    return this.authService.confirmTwoFactor(req.user.userId, body.token);
+  }
+
   @Post('verify-2fa')
   @HttpCode(HttpStatus.OK)
   async verifyTwoFactor(@Body() body: VerifyTwoFactorDto) {

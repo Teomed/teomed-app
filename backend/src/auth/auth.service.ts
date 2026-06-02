@@ -14,6 +14,41 @@ export class AuthService {
     private twoFactorService: TwoFactorService,
   ) {}
 
+  private normalizeCreatedAt(createdAt: unknown): Date | null {
+    if (!createdAt) return null;
+
+    if (createdAt instanceof Date) {
+      return Number.isNaN(createdAt.getTime()) ? null : createdAt;
+    }
+
+    const tryParse = (value: unknown) => {
+      if (typeof value !== 'string') return null;
+      const date = new Date(value);
+      if (!Number.isNaN(date.getTime())) return date;
+
+      const match = value.match(/['\"]?\$date['\"]?\s*[:=]\s*['\"]([^'\"]+)['\"]/i);
+      if (!match) return null;
+
+      const extracted = new Date(match[1]);
+      return Number.isNaN(extracted.getTime()) ? null : extracted;
+    };
+
+    if (typeof createdAt === 'string') {
+      return tryParse(createdAt);
+    }
+
+    if (typeof createdAt === 'object') {
+      const anyObj = createdAt as { $date?: unknown; ['$date']?: unknown };
+      const raw = anyObj.$date ?? anyObj['$date'];
+      if (raw instanceof Date) {
+        return Number.isNaN(raw.getTime()) ? null : raw;
+      }
+      return tryParse(raw);
+    }
+
+    return null;
+  }
+
   async validateUser(email: string, password: string): Promise<AuthDocument | null> {
     const user = await this.authModel.findOne({ email }).exec();
 
@@ -66,14 +101,12 @@ export class AuthService {
   }
 
   async setupTwoFactor(userId: string) {
-    const user = await this.authModel.findById(userId);
+    const user = await this.authModel.findById(userId).lean();
     if (!user) {
       throw new UnauthorizedException('Usuário não encontrado');
     }
 
-    const secret = user.twoFactorSecret
-      ? user.twoFactorSecret
-      : this.twoFactorService.generateSecret(user.email).secret;
+    const secret = user.twoFactorSecret ? user.twoFactorSecret : this.twoFactorService.generateSecret(user.email).secret;
 
     const otpauthUrl = user.twoFactorSecret
       ? this.twoFactorService.getOtpAuthUrl(user.email, user.twoFactorSecret)
@@ -82,8 +115,18 @@ export class AuthService {
     const qrCode = await this.twoFactorService.generateQRCode(otpauthUrl);
 
     if (!user.twoFactorSecret) {
-      user.twoFactorSecret = secret;
-      await user.save();
+      const normalizedCreatedAt = this.normalizeCreatedAt((user as any).createdAt);
+      await this.authModel
+        .updateOne(
+          { _id: userId },
+          {
+            $set: {
+              twoFactorSecret: secret,
+              ...(normalizedCreatedAt ? { createdAt: normalizedCreatedAt } : {}),
+            },
+          }
+        )
+        .exec();
     }
 
     return {
@@ -93,7 +136,7 @@ export class AuthService {
   }
 
   async confirmTwoFactor(userId: string, token: string) {
-    const user = await this.authModel.findById(userId);
+    const user = await this.authModel.findById(userId).lean();
     if (!user || !user.twoFactorSecret) {
       throw new BadRequestException('Configuração MFA não iniciada');
     }
@@ -112,17 +155,24 @@ export class AuthService {
 
     // Gerar backup codes
     const backupCodes = this.twoFactorService.generateBackupCodes();
-    const hashedBackupCodes = backupCodes.map(code => 
-      this.twoFactorService.hashBackupCode(code)
-    );
+    const hashedBackupCodes = backupCodes.map((code) => this.twoFactorService.hashBackupCode(code));
 
-    // Ativar MFA
-    user.twoFactorEnabled = true;
-    user.backupCodes = hashedBackupCodes;
-    await user.save();
+    const normalizedCreatedAt = this.normalizeCreatedAt((user as any).createdAt);
+    await this.authModel
+      .updateOne(
+        { _id: userId },
+        {
+          $set: {
+            twoFactorEnabled: true,
+            backupCodes: hashedBackupCodes,
+            ...(normalizedCreatedAt ? { createdAt: normalizedCreatedAt } : {}),
+          },
+        }
+      )
+      .exec();
 
     // Emitir token definitivo após ativação (remove requiresSetup do fluxo obrigatório)
-    const payload = { sub: user._id.toString(), email: user.email };
+    const payload = { sub: (user as any)._id.toString(), email: user.email };
 
     return {
       success: true,
@@ -157,7 +207,7 @@ export class AuthService {
       throw new UnauthorizedException('Token inválido');
     }
 
-    const user = await this.authModel.findById(decoded.sub);
+    const user = await this.authModel.findById(decoded.sub).lean();
     if (!user) {
       console.log('❌ Usuário não encontrado:', decoded.sub);
       throw new UnauthorizedException('Usuário não encontrado');
@@ -178,8 +228,16 @@ export class AuthService {
       if (isValid) {
         // Remover backup code usado
         const hashedCode = this.twoFactorService.hashBackupCode(token);
-        user.backupCodes = user.backupCodes.filter(code => code !== hashedCode);
-        await user.save();
+        const normalizedCreatedAt = this.normalizeCreatedAt((user as any).createdAt);
+        await this.authModel
+          .updateOne(
+            { _id: (user as any)._id },
+            {
+              $pull: { backupCodes: hashedCode },
+              ...(normalizedCreatedAt ? { $set: { createdAt: normalizedCreatedAt } } : {}),
+            }
+          )
+          .exec();
       }
     } else {
       // Verificar TOTP
@@ -191,14 +249,14 @@ export class AuthService {
     }
 
     // Gerar JWT definitivo
-    const payload = { sub: user._id.toString(), email: user.email };
+    const payload = { sub: (user as any)._id.toString(), email: user.email };
     return {
       access_token: this.jwtService.sign(payload),
     };
   }
 
   async disableTwoFactor(userId: string, password: string) {
-    const user = await this.authModel.findById(userId);
+    const user = await this.authModel.findById(userId).lean();
     if (!user) {
       throw new UnauthorizedException('Usuário não encontrado');
     }
@@ -209,10 +267,22 @@ export class AuthService {
       throw new UnauthorizedException('Senha incorreta');
     }
 
-    user.twoFactorEnabled = false;
-    user.twoFactorSecret = undefined;
-    user.backupCodes = [];
-    await user.save();
+    const normalizedCreatedAt = this.normalizeCreatedAt((user as any).createdAt);
+    await this.authModel
+      .updateOne(
+        { _id: userId },
+        {
+          $set: {
+            twoFactorEnabled: false,
+            backupCodes: [],
+            ...(normalizedCreatedAt ? { createdAt: normalizedCreatedAt } : {}),
+          },
+          $unset: {
+            twoFactorSecret: 1,
+          },
+        }
+      )
+      .exec();
 
     return { success: true };
   }
@@ -220,7 +290,7 @@ export class AuthService {
   async getTwoFactorStatus(userId: string) {
     console.log('📊 getTwoFactorStatus chamado para userId:', userId);
     
-    const user = await this.authModel.findById(userId);
+    const user = await this.authModel.findById(userId).lean();
     if (!user) {
       console.log('❌ Usuário não encontrado:', userId);
       throw new UnauthorizedException('Usuário não encontrado');
@@ -238,7 +308,7 @@ export class AuthService {
   }
 
   async debugTwoFactor(userId: string) {
-    const user = await this.authModel.findById(userId);
+    const user = await this.authModel.findById(userId).lean();
     if (!user) {
       throw new UnauthorizedException('Usuário não encontrado');
     }
@@ -250,7 +320,7 @@ export class AuthService {
     }) : null;
 
     return {
-      userId: user._id,
+      userId: (user as any)._id,
       email: user.email,
       twoFactorEnabled: user.twoFactorEnabled,
       hasSecret: !!user.twoFactorSecret,
