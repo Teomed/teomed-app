@@ -225,12 +225,19 @@ export default function Dashboard(): ReactElement {
         })(),
         status: 'active', // Backend não tem status, assumir ativo
         createdAt: app.uploadedAt || app.createdAt || new Date().toISOString(),
-        url:
-          typeof app.downloadUrl === 'string' &&
-          app.downloadUrl.length > 0 &&
-          !app.downloadUrl.includes('download.example.com')
-            ? app.downloadUrl
-            : undefined,
+        url: (() => {
+          const override = getAppOverride(app.name);
+
+          if (override?.url) {
+            return override.url;
+          }
+
+          return typeof app.downloadUrl === 'string' &&
+            app.downloadUrl.length > 0 &&
+            !app.downloadUrl.includes('download.example.com')
+              ? app.downloadUrl
+              : undefined;
+        })(),
       }));
       setApplications(mappedApplications);
     } catch (error) {
