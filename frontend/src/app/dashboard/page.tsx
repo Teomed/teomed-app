@@ -27,6 +27,7 @@ export default function Dashboard(): ReactElement {
         name: 'Teomed-Filemaker',
         description:
           'Prontuário médico completo: história clínica, exame físico, exames pré e pós-operatórios, evoluções, receitas, atestados e anexos.',
+        url: '/teomed-filemaker',
       };
     }
 
@@ -330,8 +331,6 @@ export default function Dashboard(): ReactElement {
                       const wrapperProps = app.url
                         ? {
                             href: app.url,
-                            target: '_blank',
-                            rel: 'noopener noreferrer',
                           }
                         : {};
                       return (
