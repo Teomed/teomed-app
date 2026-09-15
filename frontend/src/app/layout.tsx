@@ -12,6 +12,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Teomed App',
   description: 'Sistema de gerenciamento de aplicações médicas',
+  icons: {
+    icon: '/icon.svg',
+  },
 };
 
 export default function RootLayout({
