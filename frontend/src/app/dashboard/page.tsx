@@ -59,7 +59,7 @@ export default function Dashboard(): ReactElement {
         name: 'Consultas-Google',
         description:
           'Captura consultas do Google Agenda e cria um banco de dados com análise de ganhos, produtividade e evolução do faturamento.',
-        url: '/consultas-google',
+        url: 'https://www.teomed.com.br/consultas-google',
       };
     }
 
@@ -335,14 +335,8 @@ export default function Dashboard(): ReactElement {
                 {applications.map((app) => (
                   <div key={app.id} className="h-full">
                     {(() => {
-                      const Wrapper: any = app.url ? 'a' : 'div';
-                      const wrapperProps = app.url
-                        ? {
-                            href: app.url,
-                          }
-                        : {};
                       return (
-                        <Wrapper data-app-card className="group block h-full rounded-2xl focus-ring" {...wrapperProps}>
+                        <div data-app-card className="group block h-full rounded-2xl">
                           <Card className="h-full">
                             <div className="flex h-full flex-col gap-3">
                               <div>
@@ -351,17 +345,29 @@ export default function Dashboard(): ReactElement {
                               </div>
 
                               <div className="mt-auto flex items-center justify-end">
-                                <span
+                                {app.url ? (
+                                  <a
+                                    href={app.url}
+                                    className="rounded-full focus-ring"
+                                    aria-label={`Entrar em ${app.name}`}
+                                  >
+                                    <span className="fdn-button fdn-button--button-style-secondary fdn-button--size-sm fdn-button--secondary-soft">
+                                      <span>Entrar</span>
+                                    </span>
+                                  </a>
+                                ) : (
+                                  <span
                                   className={`fdn-button fdn-button--button-style-secondary fdn-button--size-sm fdn-button--secondary-soft ${
-                                    app.url ? '' : 'pointer-events-none'
+                                    'pointer-events-none'
                                   }`}
-                                >
-                                  <span>Entrar</span>
-                                </span>
+                                  >
+                                    <span>Entrar</span>
+                                  </span>
+                                )}
                               </div>
                             </div>
                           </Card>
-                        </Wrapper>
+                        </div>
                       );
                     })()}
                   </div>
