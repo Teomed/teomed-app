@@ -346,15 +346,15 @@ export default function Dashboard(): ReactElement {
 
                               <div className="mt-auto flex items-center justify-end">
                                 {app.url ? (
-                                  <a
+                                  <Button
                                     href={app.url}
-                                    className="rounded-full focus-ring"
+                                    variant="secondary"
+                                    size="small"
+                                    className="fdn-button--secondary-soft focus-ring"
                                     aria-label={`Entrar em ${app.name}`}
                                   >
-                                    <span className="fdn-button fdn-button--button-style-secondary fdn-button--size-sm fdn-button--secondary-soft">
-                                      <span>Entrar</span>
-                                    </span>
-                                  </a>
+                                    Entrar
+                                  </Button>
                                 ) : (
                                   <span
                                   className={`fdn-button fdn-button--button-style-secondary fdn-button--size-sm fdn-button--secondary-soft ${
