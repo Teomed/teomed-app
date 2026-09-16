@@ -346,19 +346,13 @@ export default function Dashboard(): ReactElement {
 
                               <div className="mt-auto flex items-center justify-end">
                                 {app.url ? (
-                                  <Button
+                                  <a
                                     href={app.url}
-                                    onClick={(event) => {
-                                      event.preventDefault();
-                                      window.location.assign(app.url!);
-                                    }}
-                                    variant="secondary"
-                                    size="small"
-                                    className="fdn-button--secondary-soft focus-ring"
+                                    className="fdn-button fdn-button--button-style-secondary fdn-button--size-sm fdn-button--button-small fdn-button--secondary-soft focus-ring"
                                     aria-label={`Entrar em ${app.name}`}
                                   >
                                     Entrar
-                                  </Button>
+                                  </a>
                                 ) : (
                                   <span
                                   className={`fdn-button fdn-button--button-style-secondary fdn-button--size-sm fdn-button--secondary-soft ${
