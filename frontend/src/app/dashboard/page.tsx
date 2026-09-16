@@ -59,7 +59,7 @@ export default function Dashboard(): ReactElement {
         name: 'Consultas-Google',
         description:
           'Captura consultas do Google Agenda e cria um banco de dados com análise de ganhos, produtividade e evolução do faturamento.',
-        url: 'https://www.teomed.com.br/consultas-google',
+        url: 'https://www.teomed.com.br/consultas-google/lista',
       };
     }
 
