@@ -348,6 +348,10 @@ export default function Dashboard(): ReactElement {
                                 {app.url ? (
                                   <Button
                                     href={app.url}
+                                    onClick={(event) => {
+                                      event.preventDefault();
+                                      window.location.assign(app.url!);
+                                    }}
                                     variant="secondary"
                                     size="small"
                                     className="fdn-button--secondary-soft focus-ring"
