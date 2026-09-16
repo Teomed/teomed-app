@@ -54,7 +54,12 @@ export default function Dashboard(): ReactElement {
       };
     }
 
-    if (n === 'medchart mobile' || n === 'medchat mobile') {
+    if (
+      n === 'medchart mobile' ||
+      n === 'medchat mobile' ||
+      n === 'consultas-google' ||
+      n === 'consultas google'
+    ) {
       return {
         name: 'Consultas-Google',
         description:
