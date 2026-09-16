@@ -187,7 +187,9 @@
  }
 
  .fdn-button--secondary-soft:hover {
+  background-color: #0b5cff;
   border-color: #0b5cff;
+  color: #fff;
  }
 
 .fdn-button--button-style-textLink,
