@@ -354,6 +354,39 @@ export default function Dashboard(): ReactElement {
                                   <button
                                     type="button"
                                     onClick={() => {
+                                      // Consultas-Google recebe o período pela URL. Calculamos a
+                                      // semana anterior aqui, no instante do clique, para não deixar
+                                      // uma data fixa no dashboard.
+                                      if (app.name === 'Consultas-Google') {
+                                        const now = new Date();
+                                        const day = now.getDay();
+                                        const daysSinceMonday = day === 0 ? 6 : day - 1;
+                                        const previousMonday = new Date(now);
+                                        previousMonday.setHours(0, 0, 0, 0);
+                                        previousMonday.setDate(
+                                          previousMonday.getDate() - daysSinceMonday - 7,
+                                        );
+
+                                        const previousSunday = new Date(previousMonday);
+                                        previousSunday.setDate(previousSunday.getDate() + 6);
+
+                                        const formatDate = (date: Date) => {
+                                          const year = date.getFullYear();
+                                          const month = String(date.getMonth() + 1).padStart(2, '0');
+                                          const dateOfMonth = String(date.getDate()).padStart(2, '0');
+                                          return `${year}-${month}-${dateOfMonth}`;
+                                        };
+
+                                        const params = new URLSearchParams({
+                                          page: '1',
+                                          pageSize: '20',
+                                          diaFrom: formatDate(previousMonday),
+                                          diaTo: formatDate(previousSunday),
+                                        });
+                                        window.location.href = `${app.url}?${params.toString()}`;
+                                        return;
+                                      }
+
                                       window.location.href = app.url!;
                                     }}
                                     className="fdn-button fdn-button--button-style-secondary fdn-button--size-sm fdn-button--button-small fdn-button--secondary-soft focus-ring"
