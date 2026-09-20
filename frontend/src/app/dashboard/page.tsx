@@ -73,6 +73,7 @@ export default function Dashboard(): ReactElement {
         name: 'Faxina',
         description:
           'Pagamento e controle da faxineira: dias trabalhados, recibos, valores e relatórios do trabalho efetuado.',
+        url: '/faxina',
       };
     }
 
