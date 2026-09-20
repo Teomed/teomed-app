@@ -68,7 +68,7 @@ export default function Dashboard(): ReactElement {
       };
     }
 
-    if (n === 'prescription generator') {
+    if (n === 'prescription generator' || n === 'faxina') {
       return {
         name: 'Faxina',
         description:
