@@ -5,6 +5,14 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: '/faxina',
+        destination: 'https://frontend-production-48dbe.up.railway.app/',
+      },
+      {
+        source: '/faxina/:path*',
+        destination: 'https://frontend-production-48dbe.up.railway.app/:path*',
+      },
+      {
         source: '/teomed-filemaker',
         destination:
           'https://frontend-production-d0898.up.railway.app/teomed-filemaker',
