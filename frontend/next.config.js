@@ -6,11 +6,11 @@ const nextConfig = {
     return [
       {
         source: '/faxina',
-        destination: 'https://frontend-production-48dbe.up.railway.app/',
+        destination: 'https://frontend-production-48dbe.up.railway.app/faxina/',
       },
       {
         source: '/faxina/:path*',
-        destination: 'https://frontend-production-48dbe.up.railway.app/:path*',
+        destination: 'https://frontend-production-48dbe.up.railway.app/faxina/:path*',
       },
       {
         source: '/teomed-filemaker',
