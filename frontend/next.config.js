@@ -6,6 +6,14 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: '/faxina-casa',
+        destination: 'https://frontend-production-1ead.up.railway.app/faxina-casa/',
+      },
+      {
+        source: '/faxina-casa/:path*',
+        destination: 'https://frontend-production-1ead.up.railway.app/faxina-casa/:path*',
+      },
+      {
         source: '/faxina',
         destination: 'https://frontend-production-48dbe.up.railway.app/faxina/',
       },

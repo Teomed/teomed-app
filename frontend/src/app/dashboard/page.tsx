@@ -77,11 +77,12 @@ export default function Dashboard(): ReactElement {
       };
     }
 
-    if (n === 'surgical planner 3d') {
+    if (n === 'surgical planner 3d' || n === 'faxina casa') {
       return {
         name: 'Faxina Casa',
         description:
           'Pagamento e controle da faxina da casa do Dr. José Luis: dias, recibos, valores e relatórios do trabalho efetuado.',
+        url: '/faxina-casa',
       };
     }
 
