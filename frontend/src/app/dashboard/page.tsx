@@ -89,6 +89,41 @@ export default function Dashboard(): ReactElement {
     return null;
   };
 
+  // Cards fixos do dashboard (não vêm do backend), inseridos logo depois do card indicado em `after`.
+  const extraCards: { after: string; app: Application }[] = [
+    {
+      after: 'Teomed-Filemaker',
+      app: {
+        id: 'financeiro-filemaker',
+        name: 'Financeiro-Filemaker',
+        description:
+          'Gestão financeira do consultório no FileMaker: receitas de consultas e cirurgias, pagamentos e controle de despesas.',
+        status: 'active',
+        createdAt: new Date().toISOString(),
+      },
+    },
+    {
+      after: 'Consultas-Google',
+      app: {
+        id: 'frances',
+        name: 'Francês',
+        description: 'Estudo e prática da língua francesa.',
+        status: 'active',
+        createdAt: new Date().toISOString(),
+      },
+    },
+  ];
+
+  const insertExtraCards = (apps: Application[]) => {
+    const result = [...apps];
+    extraCards.forEach(({ after, app }) => {
+      if (result.some((a) => a.name === app.name)) return;
+      const index = result.findIndex((a) => a.name === after);
+      result.splice(index === -1 ? result.length : index + 1, 0, app);
+    });
+    return result;
+  };
+
   const decodeToken = (token: string) => {
     try {
       const base64Url = token.split('.')[1];
@@ -247,7 +282,7 @@ export default function Dashboard(): ReactElement {
               : undefined;
         })(),
       }));
-      setApplications(mappedApplications);
+      setApplications(insertExtraCards(mappedApplications));
     } catch (error) {
       console.error('Erro:', error);
     } finally {
