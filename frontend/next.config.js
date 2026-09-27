@@ -6,6 +6,14 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: '/frances',
+        destination: 'https://frontend-production-28acf.up.railway.app/frances/',
+      },
+      {
+        source: '/frances/:path*',
+        destination: 'https://frontend-production-28acf.up.railway.app/frances/:path*',
+      },
+      {
         source: '/faxina-casa',
         destination: 'https://frontend-production-1ead.up.railway.app/faxina-casa/',
       },

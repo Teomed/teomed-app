@@ -107,7 +107,9 @@ export default function Dashboard(): ReactElement {
       app: {
         id: 'frances',
         name: 'Francês',
-        description: 'Estudo e prática da língua francesa.',
+        description:
+          'Aulas de francês com a professora Iricléa: datas, pagamentos, observações e relatórios.',
+        url: '/frances',
         status: 'active',
         createdAt: new Date().toISOString(),
       },
