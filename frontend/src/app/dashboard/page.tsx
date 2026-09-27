@@ -112,6 +112,17 @@ export default function Dashboard(): ReactElement {
         createdAt: new Date().toISOString(),
       },
     },
+    {
+      after: 'Faxina Casa',
+      app: {
+        id: 'marketing',
+        name: 'Marketing',
+        description:
+          'Marketing do consultório: campanhas, redes sociais, captação de pacientes e análise de resultados.',
+        status: 'active',
+        createdAt: new Date().toISOString(),
+      },
+    },
   ];
 
   const insertExtraCards = (apps: Application[]) => {
